@@ -8,7 +8,7 @@ reload(utils.helper)
 
 
 def orient_joint_chain(joint_chain=None, aim_vec=[1,0,0], up_vec=[0,0,1]):
-    """ Orients the first three joints of joint chain, so that they are oriented perpendicular to
+    """ Orients the first three joints of a joint chain, so that they are oriented perpendicular to
         the plane they define. Subsequent joints stay untoched. The axis that is perpendicular to
         the construction plane is neither the aim vector nor the up vector, but the third vector. """
 
@@ -40,8 +40,20 @@ def orient_joint_chain(joint_chain=None, aim_vec=[1,0,0], up_vec=[0,0,1]):
                 cmds.parent(child, jnt)
 
 
-def orient_single_joint(joint, aim_vec=[1,0,0], up_vec=[0,0,1]):
-    """ """
+
+def orient_single_joint(aim_vec=[1,0,0], up_vec=[0,0,1]):
+    """ Orients a single joint with an aim object and an up object. Select the joint that will
+    be oriented first, the aim object second, and the up object last. """
+
+    sel = cmds.ls(sl=True)
+
+    if cmds.objectType(sel[0])!='joint':
+        cmds.error('The first object of the selection must be a joint.')
+
+    cnst = cmds.aimConstraint(sel[1], sel[0], worldUpType='object', aimVector=aim_vec,
+        upVector=up_vec, worldUpObject=sel[2], worldUpVector=up_vec, mo=False)[0]
+    cmds.delete(cnst)
+    cmds.makeIdentity(sel[0], apply=True)
 
 
 
