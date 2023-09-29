@@ -148,7 +148,7 @@ class Control:
 
 
     def create_ctrl_shape(self):
-        ctl.initialize_new_curve(name=self.ctrl, shape=self.shape)
+        initialize_new_curve(name=self.ctrl, shape=self.shape)
 
     def set_scale(self):
         cmds.xform(f'{self.ctrl}.cv[*]', os=True, r=True, scale=(self.scale, self.scale, self.scale))
