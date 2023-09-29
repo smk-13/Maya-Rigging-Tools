@@ -12,6 +12,9 @@ CURRENT_DIRECTORY = os.path.dirname(__file__)
 SHAPE_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\shapes')
 
 
+
+
+
 def get_knots(crv_shape):
     sel = OpenMaya.MSelectionList()
     sel.add(crv_shape)
