@@ -73,12 +73,12 @@ def set_shape(crv, crvShapeList):
 
 
 
-def save_to_lib(crv, shape):
+def save_to_lib(crv, shape_name):
     """ get the shape data (with the get_shape function) and save it as a json file in the library. """
-    path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape}.json')
+    path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape_name}.json')
 
     with open(path, 'w') as f:
-        json.dump(get_shape(shape), f, indent=4, sort_keys=True)
+        json.dump(get_shape(shape_name), f, indent=4, sort_keys=True)
         OpenMaya.MGlobal.displayInfo('Shape successfully saved to library.')
 
     # TO DO: override warning
@@ -106,6 +106,7 @@ def initialize_new_curve(name, shape):
         cmds.delete(tmpCrv)
         newShape = cmds.rename(newShape, f'{crv}Shape{i}')
     cmds.select(cl=True)
+    return crv
 
 
 
@@ -118,13 +119,11 @@ class Control:
     def __init__(self, base_name, shape='sphere', color=22, scale=1, hidden_attrs=None,
         offsets=None, target=None, position_only=False, parent=None, limits=None, hide=False):
 
-        # naming
         self.base_name = base_name
         self.ctrl = f'{base_name}_ctl'
         self.offsets = [f'{base_name}_{token}' for token in ('grp', 'buffer')] if offsets is None else [f'{base_name}_{token}' for token in offsets]
         self.grp = self.ctrl if self.offsets == [] else self.offsets[0]
 
-        # traits
         self.scale = scale
         self.color = color
         self.shape = shape
@@ -186,18 +185,15 @@ class Control:
             cmds.transformLimits(self.ctrl, **self.limits)
 
     def hide_ctrl(self):
-        """ """
         if self.hide:
             for shp in cmds.listRelatives(self.ctrl, shapes=True):
                 cmds.setAttr(f'{shp}.visibility', 0)
 
     def tag_as_ctrl(self):
-        """ """
         self.tag = cmds.createNode('controller', name=f'{self.ctrl}_tag')
         cmds.connectAttr(f'{self.ctrl}.message', f'{self.tag}.controllerObject')
 
     def create_annotation(self, jnt):
-        """ """
         annotation_shp = cmds.annotate(self.ctrl, point=cmds.xform(jnt, query=True, ws=True, t=True), text='')
         cmds.parent(cmds.listRelatives(annotation_shp, parent=True)[0], self.ctrl)
         cmds.setAttr(f'{annotation_shp}.template', 1)
@@ -207,7 +203,6 @@ class Control:
 
 
     def place_along_pole_vector(self, elbow, distance):
-        """ """
         shoulder_vec = OpenMaya.MVector(cmds.xform(cmds.listRelatives(elbow, parent=True)[0], query=True, ws=True, t=True))
         elbow_vec = OpenMaya.MVector(cmds.xform(elbow, query=True, ws=True, t=True))
         wrist_vec = OpenMaya.MVector(cmds.xform(cmds.listRelatives(elbow, children=True)[0], query=True, ws=True, t=True))
