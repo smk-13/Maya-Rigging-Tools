@@ -9,11 +9,11 @@ import utils.helper
 reload(utils.helper)
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
-SHAPE_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\skeletons')
+SKELETON_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\skeletons')
 
 
 
-def creation_skeleton_data(joints=None):
+def get_creation_skeleton_data(joints=None):
 
     if joints is None:
         joints = utils.helper.select_by_root_joint()
@@ -75,8 +75,10 @@ def get_preferred_angle(joints=None):
 
 
 def collect_jnt_data(joints=None):
+    """ This function combines the three functions above and stores the values in a dict, which
+        can be unpacked in the create_joints function. """
 
-    creation_data = creation_skeleton_data(joints)
+    creation_data = get_creation_skeleton_data(joints)
     parent_data = get_parent_jnt(joints)
     prefAngle_data = get_preferred_angle(joints)
 
@@ -101,6 +103,38 @@ def create_joints(creation_data, parent_data, prefAngle_data):
 
     for jnt, pa in prefAngle_data.items():
         cmds.setAttr(f'{jnt}.preferredAngle', *pa)
+
+
+
+### storing the data in json files
+
+def save_to_lib(file_name, joints=None):
+    """ """
+    path = os.path.join(SKELETON_LIBRARY_PATH, f'{file_name}.json')
+
+    with open(path, 'w') as f:
+        skeleton_data = collect_jnt_data(joints=joints)
+        json.dump(skeleton_data, f, indent=4, sort_keys=True)
+        OpenMaya.MGlobal.displayInfo('Skeleton successfully saved to library.')
+
+    # TO DO: override warning
+
+
+def load_from_lib(file_name):
+    """ """
+    path = os.path.join(SKELETON_LIBRARY_PATH, f'{file_name}.json')
+
+    if os.path.isfile(path):
+        with open(path, 'r') as f:
+            return json.load(f)
+    else:
+        cmds.error(f'The file {path} doesn\'t exist.')
+
+
+def create_skeleton_from_lib(file_name):
+    """ """
+    skeleton_data = load_from_lib(file_name=file_name)
+    create_joints(**skeleton_data)
 
 
 
