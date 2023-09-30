@@ -29,8 +29,8 @@ class Master:
         self.skeleton_grp = self.create_grp(name='skeleton_grp', parent=self.RIG_grp)
         self.constraint_grp = self.create_grp(name='constraint_grp', parent=self.RIG_grp)
 
-        utils.matrix.create_direct_matrix_constraint(driver=self.master2CtlObj.ctrl, driven=self.skeleton_grp)
-        utils.matrix.create_direct_matrix_constraint(driver=self.master2CtlObj.ctrl, driven=self.constraint_grp)
+        utils.helper.create_direct_matrix_constraint(driver=self.master2CtlObj.ctrl, driven=self.skeleton_grp)
+        utils.helper.create_direct_matrix_constraint(driver=self.master2CtlObj.ctrl, driven=self.constraint_grp)
 
         self.create_global_scale_attr()
 

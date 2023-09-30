@@ -65,10 +65,10 @@ class OrientJointsDialog(QtWidgets.QDialog):
         self.r_btn6.setChecked(True)
 
         # widgets for row3
-        self.btn1 = QtWidgets.QPushButton('Orient 3-joints')
+        self.btn1 = QtWidgets.QPushButton('Orient 3 joints')
         self.btn1.setMaximumWidth(150)
 
-        self.btn2 = QtWidgets.QPushButton('Orient 1-joint')
+        self.btn2 = QtWidgets.QPushButton('Orient 1 joint')
         self.btn2.setMaximumWidth(150)
 
 

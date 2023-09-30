@@ -4,6 +4,7 @@ from maya.api import OpenMaya
 
 
 
+### general functions
 
 def convert_enum_names(enum_names: list):
     """ Turns the list ['A, 'B', 'C'] into the string 'A:B:C' """
@@ -23,6 +24,8 @@ def select_by_root_joint():
     """ Returns the selected joint and all joints that sit below it in the hierarchy. """
     root = cmds.ls(sl=True, type='joint')[0]
     sel = cmds.listRelatives(root, ad=True, type='joint')
+    if sel is None:
+        sel = list()
     sel.append(root)
     sel.reverse()
     return sel
@@ -52,6 +55,10 @@ def get_offset_matrix(transform1, transform2):
     mat2 = OpenMaya.MMatrix(cmds.xform(transform2, query=True, ws=True, matrix=True))
     mat2_inv = mat2.inverse()
     return list(mat1 * mat2_inv)
+
+def create_direct_matrix_constraint(driver, driven):
+    cmds.connectAttr(f'{driver}.worldMatrix[0]', f'{driven}.offsetParentMatrix')
+    zero_out_transform(driven)
 
 
 
@@ -143,5 +150,30 @@ def create_offset_transform(name, position_target, rotation_target, joint=False,
     if parent:
         cmds.parent(new_transform, parent)
     return new_transform
+
+
+
+### other
+
+def optimize_constraint(constraint):
+    """ """
+
+    cnst_type = cmds.nodeType(constraint)
+    cnst_obj = constraint.rpartition('_')[0]
+
+    if cnst_type in ['parentConstraint', 'aimConstraint'] :
+        cmds.disconnectAttr(f'{cnst_obj}.rotateOrder', f'{constraint}.constraintRotateOrder')
+        cmds.disconnectAttr(f'{cnst_obj}.rotatePivot', f'{constraint}.constraintRotatePivot')
+        cmds.disconnectAttr(f'{cnst_obj}.rotatePivotTranslate', f'{constraint}.constraintRotateTranslate')
+    elif cnst_type == 'pointConstraint':
+        cmds.disconnectAttr(f'{cnst_obj}.rotatePivot', f'{constraint}.constraintRotatePivot')
+        cmds.disconnectAttr(f'{cnst_obj}.rotatePivotTranslate', f'{constraint}.constraintRotateTranslate')
+    elif cnst_type == 'orientConstraint':
+        cmds.disconnectAttr(f'{cnst_obj}.rotateOrder', f'{constraint}.constraintRotateOrder')
+
+    cnst_obj_parent = cmds.listRelatives(cnst_obj, parent=True)
+    if cnst_obj_parent:
+        cmds.connectAttr(f'{cnst_obj_parent[0]}.worldInverseMatrix', f'{constraint}.constraintParentInverseMatrix', f=True)
+
 
 

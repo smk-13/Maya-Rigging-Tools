@@ -8,9 +8,6 @@ reload(utils.helper)
 import ctl.ctrl 
 reload(ctl.ctrl)
 
-import utils.matrix
-reload(utils.matrix)
-
 import BNS.bns_master
 reload(BNS.bns_master)
 
