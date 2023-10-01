@@ -16,7 +16,7 @@ def orient_joint_chain(joint_chain=None, aim_vec=[1,0,0], up_vec=[0,0,1]):
         joint_chain = utils.helper.select_by_root_joint()
 
     for n, jnt in enumerate(joint_chain):
-        children = cmds.listRelatives(children=True)
+        children = cmds.listRelatives(jnt, children=True)
         if children:
             for child in children:
                 cmds.parent(child, world=True)
@@ -50,10 +50,19 @@ def orient_single_joint(aim_vec=[1,0,0], up_vec=[0,0,1]):
     if cmds.objectType(sel[0])!='joint':
         cmds.error('The first object of the selection must be a joint.')
 
+    children = cmds.listRelatives(sel[0], children=True)
+    if children:
+        for child in children:
+            cmds.parent(child, world=True)
+
     cnst = cmds.aimConstraint(sel[1], sel[0], worldUpType='object', aimVector=aim_vec,
         upVector=up_vec, worldUpObject=sel[2], worldUpVector=up_vec, mo=False)[0]
     cmds.delete(cnst)
     cmds.makeIdentity(sel[0], apply=True)
+
+    if children:
+        for child in children:
+            cmds.parent(child, sel[0])
 
 
 
