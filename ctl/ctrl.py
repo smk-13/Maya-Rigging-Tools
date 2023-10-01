@@ -77,8 +77,10 @@ def save_to_lib(crv, shape_name):
     """ get the shape data (with the get_shape function) and save it as a json file in the library. """
     path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape_name}.json')
 
+    shape_data = get_shape(shape_name)
+
     with open(path, 'w') as f:
-        json.dump(get_shape(shape_name), f, indent=4, sort_keys=True)
+        json.dump(shape_data, f, indent=4, sort_keys=True)
         OpenMaya.MGlobal.displayInfo('Shape successfully saved to library.')
 
     # TO DO: override warning

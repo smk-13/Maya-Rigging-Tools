@@ -15,7 +15,8 @@ SKELETON_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\skeletons')
 
 def get_creation_skeleton_data(joints=None):
 
-    #if joints is None: joints = utils.helper.select_by_root_joint()
+    if joints is None:
+        joints = cmds.ls(sl=True, type='joint')
 
     creation_data = list()
 
@@ -42,7 +43,8 @@ def get_creation_skeleton_data(joints=None):
 def get_parent_jnt(joints=None):
     """ """
 
-    #if joints is None: joints = utils.helper.select_by_root_joint()
+    if joints is None:
+        joints = cmds.ls(sl=True, type='joint')
 
     parent_dict = dict()
 
@@ -59,7 +61,8 @@ def get_parent_jnt(joints=None):
 
 def get_preferred_angle(joints=None):
     """ """
-    #if joints is None: joints = utils.helper.select_by_root_joint()
+    if joints is None:
+        joints = cmds.ls(sl=True, type='joint')
 
     pa_dict = dict()
 
@@ -109,8 +112,9 @@ def save_to_lib(file_name, joints=None):
     """ """
     path = os.path.join(SKELETON_LIBRARY_PATH, f'{file_name}.json')
 
+    skeleton_data = collect_jnt_data(joints=joints)
+
     with open(path, 'w') as f:
-        skeleton_data = collect_jnt_data(joints=joints)
         json.dump(skeleton_data, f, indent=4, sort_keys=True)
         OpenMaya.MGlobal.displayInfo('Skeleton successfully saved to library.')
 
