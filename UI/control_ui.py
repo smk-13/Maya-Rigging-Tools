@@ -34,8 +34,8 @@ class ControlDialog(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setWindowTitle('Control')
-        self.setMaximumWidth(380)
-        self.setMinimumWidth(380)
+        self.setMaximumWidth(400)
+        self.setMinimumWidth(400)
 
         self.create_widgets()
         self.create_layouts()

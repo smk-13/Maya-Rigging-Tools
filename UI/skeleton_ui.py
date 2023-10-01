@@ -27,8 +27,8 @@ class SkeletonDialog(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setWindowTitle('Skeleton')
-        self.setMaximumWidth(380)
-        self.setMinimumWidth(380)
+        self.setMaximumWidth(400)
+        self.setMinimumWidth(400)
 
         self.create_widgets()
         self.create_layouts()
@@ -47,7 +47,7 @@ class SkeletonDialog(QtWidgets.QDialog):
         self.customSkelLine.setPlaceholderText('If not listed in drop down list')
 
         self.newSkelLine = QtWidgets.QLineEdit()
-        self.newSkelLine.setPlaceholderText('select the root joint and give a name')
+        self.newSkelLine.setPlaceholderText('select joints and give a name')
 
         self.btn_load = QtWidgets.QPushButton('Load')
         self.btn_load.setMaximumWidth(60)

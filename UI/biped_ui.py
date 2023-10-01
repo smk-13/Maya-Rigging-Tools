@@ -44,8 +44,6 @@ class BipedDialog(QtWidgets.QDialog):
     def create_widgets(self):
         """ """
         self.master_btn = QtWidgets.QPushButton('Create Master')
-        self.save_skel_btn = QtWidgets.QPushButton('Save Skeleton')
-        self.load_skel_btn = QtWidgets.QPushButton('Load Skeleton')
 
     def create_layouts(self):
         """ """
@@ -70,8 +68,7 @@ class BipedDialog(QtWidgets.QDialog):
 
         # add widgets
         collapsible_wdg1.addWidget(self.master_btn)
-        collapsible_wdg1.addWidget(self.save_skel_btn)
-        collapsible_wdg1.addWidget(self.load_skel_btn)
+
 
     def create_connections(self):
         """ """

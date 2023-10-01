@@ -25,8 +25,8 @@ class OrientJointsDialog(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setWindowTitle('Orient Joints')
-        self.setMaximumWidth(380)
-        self.setMinimumWidth(380)
+        self.setMaximumWidth(500)
+        self.setMinimumWidth(500)
 
         self.create_widgets()
         self.create_layouts()
@@ -41,28 +41,40 @@ class OrientJointsDialog(QtWidgets.QDialog):
         # widgets for row1
         self.label1 = QtWidgets.QLabel('Aim Axis')
 
-        self.r_btn1 = QtWidgets.QRadioButton('X')
-        self.r_btn2 = QtWidgets.QRadioButton('Y')
-        self.r_btn3 = QtWidgets.QRadioButton('Z')
+        self.r_btn_aimX = QtWidgets.QRadioButton('X')
+        self.r_btn_aimY = QtWidgets.QRadioButton('Y')
+        self.r_btn_aimZ = QtWidgets.QRadioButton('Z')
+        self.r_btn_aimNX = QtWidgets.QRadioButton('-X')
+        self.r_btn_aimNY = QtWidgets.QRadioButton('-Y')
+        self.r_btn_aimNZ = QtWidgets.QRadioButton('-Z')
 
         self.btn_grp = QtWidgets.QButtonGroup()
-        self.btn_grp.addButton(self.r_btn1)
-        self.btn_grp.addButton(self.r_btn2)
-        self.btn_grp.addButton(self.r_btn3)
-        self.r_btn1.setChecked(True)
+        self.btn_grp.addButton(self.r_btn_aimX)
+        self.btn_grp.addButton(self.r_btn_aimY)
+        self.btn_grp.addButton(self.r_btn_aimZ)
+        self.btn_grp.addButton(self.r_btn_aimNX)
+        self.btn_grp.addButton(self.r_btn_aimNY)
+        self.btn_grp.addButton(self.r_btn_aimNZ)
+        self.r_btn_aimX.setChecked(True)
 
         # widgets for row2
         self.label2 = QtWidgets.QLabel('Up Axis')
 
-        self.r_btn4 = QtWidgets.QRadioButton('X')
-        self.r_btn5 = QtWidgets.QRadioButton('Y')
-        self.r_btn6 = QtWidgets.QRadioButton('Z')
+        self.r_btn_upX = QtWidgets.QRadioButton('X')
+        self.r_btn_upY = QtWidgets.QRadioButton('Y')
+        self.r_btn_upZ = QtWidgets.QRadioButton('Z')
+        self.r_btn_upNX = QtWidgets.QRadioButton('-X')
+        self.r_btn_upNY = QtWidgets.QRadioButton('-Y')
+        self.r_btn_upNZ = QtWidgets.QRadioButton('-Z')
 
         self.btn_grp = QtWidgets.QButtonGroup()
-        self.btn_grp.addButton(self.r_btn4)
-        self.btn_grp.addButton(self.r_btn5)
-        self.btn_grp.addButton(self.r_btn6)
-        self.r_btn6.setChecked(True)
+        self.btn_grp.addButton(self.r_btn_upX)
+        self.btn_grp.addButton(self.r_btn_upY)
+        self.btn_grp.addButton(self.r_btn_upZ)
+        self.btn_grp.addButton(self.r_btn_upNX)
+        self.btn_grp.addButton(self.r_btn_upNY)
+        self.btn_grp.addButton(self.r_btn_upNZ)
+        self.r_btn_upZ.setChecked(True)
 
         # widgets for row3
         self.btn1 = QtWidgets.QPushButton('Orient 3 joints')
@@ -83,14 +95,20 @@ class OrientJointsDialog(QtWidgets.QDialog):
         main_layout.addLayout(row3)
 
         row1.addWidget(self.label1)
-        row1.addWidget(self.r_btn1)
-        row1.addWidget(self.r_btn2)
-        row1.addWidget(self.r_btn3)
+        row1.addWidget(self.r_btn_aimX)
+        row1.addWidget(self.r_btn_aimY)
+        row1.addWidget(self.r_btn_aimZ)
+        row1.addWidget(self.r_btn_aimNX)
+        row1.addWidget(self.r_btn_aimNY)
+        row1.addWidget(self.r_btn_aimNZ)
 
         row2.addWidget(self.label2)
-        row2.addWidget(self.r_btn4)
-        row2.addWidget(self.r_btn5)
-        row2.addWidget(self.r_btn6)
+        row2.addWidget(self.r_btn_upX)
+        row2.addWidget(self.r_btn_upY)
+        row2.addWidget(self.r_btn_upZ)
+        row2.addWidget(self.r_btn_upNX)
+        row2.addWidget(self.r_btn_upNY)
+        row2.addWidget(self.r_btn_upNZ)
 
         # row3
         row3.addWidget(self.btn1)
@@ -104,21 +122,40 @@ class OrientJointsDialog(QtWidgets.QDialog):
         self.btn2.clicked.connect(self.create_run_cmd2)
 
 
+    def get_axis(self):
+
+        if self.r_btn_aimX.isChecked():
+            aim_axis = [1,0,0]
+        elif self.r_btn_aimY.isChecked():
+            aim_axis = [0,1,0]
+        elif self.r_btn_aimZ.isChecked():
+            aim_axis = [0,0,1]
+        elif self.r_btn_aimNX.isChecked():
+            aim_axis = [-1,0,0]
+        elif self.r_btn_aimNY.isChecked():
+            aim_axis = [0,-1,0]
+        else:
+            aim_axis = [0,0,-1]
+
+        if self.r_btn_upX.isChecked():
+            up_axis = [1,0,0]
+        elif self.r_btn_upY.isChecked():
+            up_axis = [0,1,0]
+        elif self.r_btn_upZ.isChecked():
+            up_axis = [0,0,1]
+        elif self.r_btn_upNX.isChecked():
+            up_axis = [-1,0,0]
+        elif self.r_btn_upNY.isChecked():
+            up_axis = [0,-1,0]
+        else:
+            up_axis = [0,0,-1]
+
+        return aim_axis, up_axis
+
+
     def create_run_cmd1(self):
         """ """
-        if self.r_btn1.isChecked():
-            aim_axis = [1,0,0]
-        elif self.r_btn2.isChecked():
-            aim_axis = [0,1,0]
-        else:
-            aim_axis = [0,0,1]
-
-        if self.r_btn4.isChecked():
-            up_axis = [1,0,0]
-        elif self.r_btn5.isChecked():
-            up_axis = [0,1,0]
-        else:
-            up_axis = [0,0,1]
+        aim_axis, up_axis = self.get_axis()
 
         utils.orient_joints.orient_joint_chain(joint_chain=None,
             aim_vec=aim_axis, up_vec=up_axis)
@@ -126,19 +163,7 @@ class OrientJointsDialog(QtWidgets.QDialog):
 
     def create_run_cmd2(self):
         """ """
-        if self.r_btn1.isChecked():
-            aim_axis = [1,0,0]
-        elif self.r_btn2.isChecked():
-            aim_axis = [0,1,0]
-        else:
-            aim_axis = [0,0,1]
-
-        if self.r_btn4.isChecked():
-            up_axis = [1,0,0]
-        elif self.r_btn5.isChecked():
-            up_axis = [0,1,0]
-        else:
-            up_axis = [0,0,1]
+        aim_axis, up_axis = self.get_axis()
 
         utils.orient_joints.orient_single_joint(aim_vec=aim_axis, up_vec=up_axis)
 
