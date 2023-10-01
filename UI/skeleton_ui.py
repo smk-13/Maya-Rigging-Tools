@@ -40,7 +40,7 @@ class SkeletonDialog(QtWidgets.QDialog):
 
         self.skelComboBox = QtWidgets.QComboBox()
         self.skelComboBox.setMaxVisibleItems(30)
-        self.skelComboBox.addItem('test', 'test')
+        self.skelComboBox.addItem('test1', 'test1')
         self.skelComboBox.addItem('test2', 'test2')
 
         self.customSkelLine = QtWidgets.QLineEdit()

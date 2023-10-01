@@ -1,0 +1,68 @@
+[
+    {
+        "name": "L_hip_jnt",
+        "orientation": [
+            0.0,
+            218.99099404250546,
+            89.99999999999994
+        ],
+        "parent": null,
+        "position": [
+            0.0,
+            13.07312252964427,
+            -1.2450592885375489
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 1.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_knee_jnt",
+        "orientation": [
+            0.0,
+            142.47573738554817,
+            89.99999999999994
+        ],
+        "parent": "L_hip_jnt",
+        "position": [
+            5.127595883936577e-30,
+            6.847826086956549,
+            3.7944664031620343
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 1.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_ankle_jnt",
+        "orientation": [
+            0.0,
+            142.47573738554817,
+            89.99999999999994
+        ],
+        "parent": "L_knee_jnt",
+        "position": [
+            -7.343131604670871e-16,
+            -0.5632411067193628,
+            -1.897233201581031
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 1.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    }
+]

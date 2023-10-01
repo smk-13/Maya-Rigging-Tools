@@ -1,168 +1,200 @@
-{
-    "creation_data": [
-        {
-            "name": "L_shoulder",
-            "orientation": [
-                176.0962842169781,
-                56.695649926493715,
-                135.81813395432147
-            ],
-            "position": [
-                -3.456687652932361,
-                0.0,
-                7.249451223781146
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "L_elbow",
-            "orientation": [
-                2.9264771839813712,
-                42.92932115772892,
-                -38.923612010674816
-            ],
-            "position": [
-                -7.189592586191171,
-                3.6277934117288946,
-                -0.6735959619653951
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "L_wrist",
-            "orientation": [
-                2.9264771839813712,
-                42.92932115772892,
-                -38.923612010674816
-            ],
-            "position": [
-                -2.6974082604323435,
-                -5.329070518200751e-15,
-                -6.044760074280361
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "R_elbow",
-            "orientation": [
-                180.0,
-                57.53878941818463,
-                6.57897800204862e-31
-            ],
-            "position": [
-                4.3623515103045705,
-                0.0,
-                6.749486713504317
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "R_wrist",
-            "orientation": [
-                179.99999999999997,
-                79.24986031199226,
-                0.0
-            ],
-            "position": [
-                8.101284664544107,
-                2.1982171632541437e-31,
-                0.8717598427437094
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "R_index",
-            "orientation": [
-                180.0,
-                -31.06489691857913,
-                0.0
-            ],
-            "position": [
-                1.5986126581081797,
-                6.208033952849139e-15,
-                -3.045471001454736
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "R_middle",
-            "orientation": [
-                180.0,
-                -66.21411316594401,
-                0.0
-            ],
-            "position": [
-                4.91039047594799,
-                3.4711380330942937e-15,
-                -6.367794926325918
-            ],
-            "scaleCompensate": true
-        },
-        {
-            "name": "R_ring",
-            "orientation": [
-                179.99999999999997,
-                79.24986031199226,
-                0.0
-            ],
-            "position": [
-                9.332480526171203,
-                -1.3553573057763743e-15,
-                -5.613049286019554
-            ],
-            "scaleCompensate": true
-        }
-    ],
-    "parent_data": {
-        "L_elbow": "L_shoulder",
-        "L_shoulder": null,
-        "L_wrist": "L_elbow",
-        "R_elbow": null,
-        "R_index": "R_wrist",
-        "R_middle": "R_wrist",
-        "R_ring": "R_wrist",
-        "R_wrist": "R_elbow"
+[
+    {
+        "name": "jnt_chainA_0",
+        "orientation": [
+            50.89674300234212,
+            9.882584902475907,
+            40.031727227974464
+        ],
+        "parent": null,
+        "position": [
+            -3.84048023384202,
+            0.0,
+            -3.650255323226843
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.6927023628965672,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
     },
-    "prefAngle_data": {
-        "L_elbow": [
+    {
+        "name": "jnt_chainA_1",
+        "orientation": [
+            89.72498743076991,
+            -40.137064506756026,
+            -61.46538335194349
+        ],
+        "parent": "jnt_chainA_0",
+        "position": [
+            0.7673338346370242,
+            3.870765176923849,
+            -4.698657224593381
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "L_shoulder": [
+        "radius": 0.6691276973576076,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainA_2",
+        "orientation": [
+            89.72498743076991,
+            -40.137064506756026,
+            -61.46538335194349
+        ],
+        "parent": "jnt_chainA_1",
+        "position": [
+            2.8720168875206515,
+            -8.881784197001252e-16,
+            -0.9836175696538949
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "L_wrist": [
+        "radius": 0.6691276973576076,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainB_0",
+        "orientation": [
+            29.565007776236783,
+            8.41500452392383,
+            12.924080212008414
+        ],
+        "parent": null,
+        "position": [
+            -7.001860720588749,
+            0.0,
+            1.8458321115965912
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "R_elbow": [
+        "radius": 0.7109089333110767,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainB_1",
+        "orientation": [
+            40.58083599309323,
+            -41.38184512070095,
+            -21.3411389923404
+        ],
+        "parent": "jnt_chainB_0",
+        "position": [
+            -1.9817827639738832,
+            1.1519720553849924,
+            1.0838859574885484
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "R_index": [
+        "radius": 0.6581971301928122,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainB_2",
+        "orientation": [
+            40.58083599309323,
+            -41.38184512070095,
+            -21.3411389923404
+        ],
+        "parent": "jnt_chainB_1",
+        "position": [
+            0.9666158620028757,
+            -1.3322676295501878e-15,
+            3.872826258836011
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "R_middle": [
+        "radius": 0.6581971301928122,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainC_1",
+        "orientation": [
             0.0,
             0.0,
             0.0
         ],
-        "R_ring": [
+        "parent": "jnt_chainB_1",
+        "position": [
+            -0.30129102835978494,
+            1.2751231514135994,
+            5.185619633527774
+        ],
+        "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "R_wrist": [
+        "radius": 0.5,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainC_2",
+        "orientation": [
             0.0,
             0.0,
             0.0
-        ]
+        ],
+        "parent": "jnt_chainC_1",
+        "position": [
+            0.6665729211429372,
+            -1.3322676295501878e-15,
+            7.102184434120778
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.5,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "jnt_chainD_1",
+        "orientation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "parent": "jnt_chainB_1",
+        "position": [
+            -1.7904505478847108,
+            -2.220446049250313e-15,
+            6.433071341880081
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.5,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
     }
-}
+]
