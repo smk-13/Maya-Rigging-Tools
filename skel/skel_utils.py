@@ -15,8 +15,7 @@ SKELETON_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\skeletons')
 
 def get_creation_skeleton_data(joints=None):
 
-    if joints is None:
-        joints = utils.helper.select_by_root_joint()
+    #if joints is None: joints = utils.helper.select_by_root_joint()
 
     creation_data = list()
 
@@ -43,8 +42,7 @@ def get_creation_skeleton_data(joints=None):
 def get_parent_jnt(joints=None):
     """ """
 
-    if joints is None:
-        joints = utils.helper.select_by_root_joint()
+    #if joints is None: joints = utils.helper.select_by_root_joint()
 
     parent_dict = dict()
 
@@ -61,8 +59,7 @@ def get_parent_jnt(joints=None):
 
 def get_preferred_angle(joints=None):
     """ """
-    if joints is None:
-        joints = utils.helper.select_by_root_joint()
+    #if joints is None: joints = utils.helper.select_by_root_joint()
 
     pa_dict = dict()
 
@@ -106,7 +103,7 @@ def create_joints(creation_data, parent_data, prefAngle_data):
 
 
 
-### storing the data in json files
+### storing and loading the data in and from json files
 
 def save_to_lib(file_name, joints=None):
     """ """
@@ -136,10 +133,7 @@ def create_skeleton_from_lib(file_name):
     skeleton_data = load_from_lib(file_name=file_name)
     create_joints(**skeleton_data)
 
-    # turn on local rotation axis
-    for single_jnt_creation_data in skeleton_data['creation_data']:
-        jnt = single_jnt_creation_data['name']
-        cmds.setAttr(f'{jnt}.displayLocalAxis', 1)
+
 
 
 
