@@ -6,7 +6,9 @@ import shelves.shelf_base
 reload(shelves.shelf_base)
 
 
-# copy to userSetup.py file or run in script editor:
+# copy to userSetup.py file (or run in script editor after every maya start up):
+# from maya import cmds
+# from importlib import reload
 # import shelves.shelf_sk
 # reload(shelves.shelf_sk)
 # shelves.shelf_sk.sk_shelf(name='sk')
@@ -15,11 +17,6 @@ reload(shelves.shelf_base)
 class sk_shelf(shelves.shelf_base._shelf):
 
     def build(self):
-
-        from maya import cmds
-        from maya.api import OpenMaya
-        from importlib import reload
-
         self.addButton(label='LRA_on', command=self.lkaOn_cmd)
         self.addButton(label='LRA_off', command=self.lkaOff_cmd)
         self.addButton(label="CTRL", command=self.ctrl_cmd)
@@ -31,45 +28,28 @@ class sk_shelf(shelves.shelf_base._shelf):
         """ """
         import UI.control_ui
         reload(UI.control_ui)
+        UI.control_ui.ControlDialog()
 
-        try:
-            d1.close()
-            d1.deleteLater()
-        except:
-            pass
-        d1 = UI.control_ui.ControlDialog()
-        d1.show()
 
     def orient_cmd(self):
         """ """
         import UI.orient_joints_ui
         reload(UI.orient_joints_ui)
+        UI.orient_joints_ui.OrientJointsDialog()
 
-        try:
-            d2.close()
-            d2.deleteLater()
-        except:
-            pass
-        d2 = UI.orient_joints_ui.OrientJointsDialog()
-        d2.show()
 
     def skel_cmd(self):
         """ """
         import UI.skeleton_ui
         reload(UI.skeleton_ui)
+        UI.skeleton_ui.SkeletonDialog()
 
-        try:
-            d3.close()
-            d3.deleteLater()
-        except:
-            pass
-        d3 = UI.skeleton_ui.SkeletonDialog()
-        d3.show()
 
     def lkaOn_cmd(self):
         all_joints = cmds.ls(type='joint')
         for jnt in all_joints:
             cmds.setAttr(f'{jnt}.displayLocalAxis', 1)
+
 
     def lkaOff_cmd(self):
         all_joints = cmds.ls(type='joint')

@@ -112,6 +112,17 @@ def initialize_new_curve(name, shape):
 
 
 
+def tag_as_ctrl(ctrl):
+    """ """
+    tag = cmds.createNode('controller', name=f'{ctrl}_tag')
+    cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
+
+def create_offsets():
+    """ """
+
+def match_transform():
+    """ """
+
 
 
 
@@ -258,6 +269,9 @@ class Control:
             cmds.xform(self.grp, ws=True, matrix=temp_loc_matrix)
 
             cmds.delete(temp_loc)
+
+
+
 
 
 

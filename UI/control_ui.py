@@ -15,6 +15,7 @@ reload(UI.collapsible_wdg)
 
 
 
+
 def maya_main_window():
     maya_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(int(maya_window_ptr), QtWidgets.QWidget)
@@ -26,6 +27,9 @@ def create_unique_name(base_name):
         new_name = "{}_{}".format(base_name, count)
         count += 1
     return new_name
+
+
+
 
 
 class ControlDialog(QtWidgets.QDialog):
@@ -42,6 +46,7 @@ class ControlDialog(QtWidgets.QDialog):
         self.create_connections()
 
         self.show()
+
 
     def create_widgets(self):
 
@@ -204,20 +209,8 @@ class ControlDialog(QtWidgets.QDialog):
 
 
 
-if __name__ == "__main__":
-
-    try:
-        d.close()
-        d.deleteLater()
-    except:
-        pass
-
-    d = UI.control_ui.ControlDialog()
-    d.show()
 
 
 
 
 
-# TO DO: Button to print a list of all shapes of library
-# TO DO: Add control class functionality like offset groups and tag as controller
