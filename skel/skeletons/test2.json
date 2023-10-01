@@ -1,0 +1,68 @@
+{
+    "creation_data": [
+        {
+            "name": "joint1",
+            "orientation": [
+                0.0,
+                19.939627001292507,
+                0.0
+            ],
+            "position": [
+                -5.090684619313366,
+                0.0,
+                -4.098743138717678
+            ],
+            "scaleCompensate": true
+        },
+        {
+            "name": "joint2",
+            "orientation": [
+                0.0,
+                -47.289032039619045,
+                0.0
+            ],
+            "position": [
+                3.530444357949074,
+                0.0,
+                -7.226293846591078
+            ],
+            "scaleCompensate": true
+        },
+        {
+            "name": "joint3",
+            "orientation": [
+                0.0,
+                -47.289032039619045,
+                0.0
+            ],
+            "position": [
+                10.019885746722142,
+                0.0,
+                -0.1964541489214353
+            ],
+            "scaleCompensate": true
+        }
+    ],
+    "parent_data": {
+        "joint1": null,
+        "joint2": "joint1",
+        "joint3": "joint2"
+    },
+    "prefAngle_data": {
+        "joint1": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "joint2": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "joint3": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

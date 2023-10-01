@@ -116,7 +116,7 @@ class ControlDialog(QtWidgets.QDialog):
 
         form_layout = QtWidgets.QFormLayout()
         form_layout.addRow('Shape', self.shapesComboBox)
-        form_layout.addRow('Custom Shape', self.customShapeLine)
+        form_layout.addRow('Quick Search', self.customShapeLine)
         form_layout.addRow('Scale', self.scaleSpinBox)
         form_layout.addRow('Color Index', self.colorSpinBox)
 
