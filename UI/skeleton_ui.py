@@ -96,7 +96,12 @@ class SkeletonDialog(QtWidgets.QDialog):
         if custom_skel != '':
             skel_name = custom_skel
 
-        skel.skel_utils.create_skeleton_from_lib(file_name=skel_name)
+        skeleton_data = skel.skel_utils.create_skeleton_from_lib(file_name=skel_name)
+
+        # turn on local rotation axis
+        for single_jnt_creation_data in skeleton_data['creation_data']:
+            jnt = single_jnt_creation_data['name']
+            cmds.setAttr(f'{jnt}.displayLocalAxis', 1)
 
     def save_cmd(self):
         """ """

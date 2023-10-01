@@ -136,5 +136,11 @@ def create_skeleton_from_lib(file_name):
     skeleton_data = load_from_lib(file_name=file_name)
     create_joints(**skeleton_data)
 
+    # turn on local rotation axis
+    for single_jnt_creation_data in skeleton_data['creation_data']:
+        jnt = single_jnt_creation_data['name']
+        cmds.setAttr(f'{jnt}.displayLocalAxis', 1)
+
+
 
 
