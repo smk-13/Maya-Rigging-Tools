@@ -77,14 +77,15 @@ class OrientJointsDialog(QtWidgets.QDialog):
         self.r_btn_upZ.setChecked(True)
 
         # widgets for row3
-        self.btn1 = QtWidgets.QPushButton('Orient 3 joints')
+        self.btn1 = QtWidgets.QPushButton('3 joints')
         #self.btn1.setMaximumWidth(150)
 
-        self.btn2 = QtWidgets.QPushButton('Orient 1 joint')
+        self.btn2 = QtWidgets.QPushButton('1 joint')
         #self.btn2.setMaximumWidth(150)
 
-        self.btn3 = QtWidgets.QPushButton('zero out orientation')
+        self.btn3 = QtWidgets.QPushButton('zero out')
         #self.btn2.setMaximumWidth(150)
+
 
 
     def create_layouts(self):
@@ -126,7 +127,6 @@ class OrientJointsDialog(QtWidgets.QDialog):
         self.btn2.clicked.connect(self.create_run_cmd2)
         self.btn3.clicked.connect(self.create_zero_out_cmd)
 
-
     def get_axis(self):
 
         if self.r_btn_aimX.isChecked():
@@ -162,8 +162,7 @@ class OrientJointsDialog(QtWidgets.QDialog):
         """ """
         aim_axis, up_axis = self.get_axis()
 
-        utils.orient_joints.orient_joint_chain(joint_chain=None,
-            aim_vec=aim_axis, up_vec=up_axis)
+        utils.orient_joints.orient_three_joints(joint_chain=None, aim_vec=aim_axis, up_vec=up_axis)
 
 
     def create_run_cmd2(self):
@@ -175,8 +174,9 @@ class OrientJointsDialog(QtWidgets.QDialog):
 
     def create_zero_out_cmd(self):
         """ """
-        jnt = cmds.ls(sl=True, type='joint')[0]
-        cmds.joint(jnt, edit=True, orientation=[0,0,0])
+        joints = cmds.ls(sl=True, type='joint')
+        for jnt in joints:
+            cmds.joint(jnt, edit=True, orientation=[0,0,0])
 
 
 

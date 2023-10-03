@@ -155,6 +155,38 @@ def create_offset_transform(name, position_target, rotation_target, joint=False,
 
 ### other
 
+def create_equidistant_joint_chain(joints=None, joint_count=4):
+    """ Number of joints includes start and end joint. """
+
+    if joints is None:
+        joints = cmds.ls(sl=True, type='joint')
+
+    vec1 = OpenMaya.MVector(cmds.xform(joints[0], query=True, ws=True, t=True))
+    vec2 = OpenMaya.MVector(cmds.xform(joints[1], query=True, ws=True, t=True))
+
+    vec3 = vec2 - vec1
+    length = vec3.length()
+    segments = joint_count - 1
+    seg_len = length / segments
+    vec3_dir = vec3.normal()
+
+    cmds.select(cl=True)
+    for i in range(joint_count):
+        jnt = cmds.joint()
+        vec4 = vec1 + vec3_dir * seg_len * i
+        cmds.xform(jnt, ws=True, t=vec4)
+        cmds.matchTransform(jnt, joints[0], rotation=True)
+
+
+def measure_distance():
+    sel = cmds.ls(sl=True, flatten=True)
+    if len(sel) <2:
+        cmds.error('Select two objects or vertices to measure the distance between them.')
+    vec0 = OpenMaya.MVector(cmds.xform(sel[0], query=True, ws=True, t=True))
+    vec1 = OpenMaya.MVector(cmds.xform(sel[1], query=True, ws=True, t=True))
+    result_vec = vec1 - vec0
+    return result_vec.length()
+
 def optimize_constraint(constraint):
     """ """
 

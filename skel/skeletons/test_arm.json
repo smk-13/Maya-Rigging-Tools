@@ -1,0 +1,90 @@
+[
+    {
+        "name": "L_shoulder",
+        "orientation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "parent": null,
+        "position": [
+            -3.0,
+            0.0,
+            0.0
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.603448275862069,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_upperArm",
+        "orientation": [
+            43.52497353756976,
+            24.90297566256828,
+            21.798531536654597
+        ],
+        "parent": "L_shoulder",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.7952519275430708,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_forearm",
+        "orientation": [
+            52.42311905033426,
+            -37.98674717404509,
+            -38.65573685854262
+        ],
+        "parent": "L_upperArm",
+        "position": [
+            6.000000000000005,
+            2.399650408326117,
+            -3.0000000000000018
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.6677227941613424,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_wrist",
+        "orientation": [
+            52.42311905033426,
+            -37.98674717404509,
+            -38.65573685854262
+        ],
+        "parent": "L_forearm",
+        "position": [
+            9.000000000000004,
+            4.440892098500626e-16,
+            0.0
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 0.6677227941613424,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    }
+]

@@ -112,16 +112,33 @@ def initialize_new_curve(name, shape):
 
 
 
+# utilty
+
 def tag_as_ctrl(ctrl):
     """ """
     tag = cmds.createNode('controller', name=f'{ctrl}_tag')
     cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
 
-def create_offsets():
+def create_offsets(ctrl=None, number=2):
     """ """
+    if ctrl is None:
+        ctrl = cmds.ls(sl=True, type='transform')[0]
 
-def match_transform():
-    """ """
+    offsets = list()
+
+    parent_offset = None
+    for i in range(number):
+        offset = cmds.createNode('transform')
+        offsets.append(offset)
+        if parent_offset:
+            cmds.parent(offset, parent_offset)
+        parent_offset = offset
+        if i == number-1:
+            cmds.parent(ctrl, offset)
+
+    return offsets
+
+
 
 
 

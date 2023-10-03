@@ -73,12 +73,14 @@ class ControlDialog(QtWidgets.QDialog):
         self.shapesComboBox.addItem('four sided pyramide', 'four_sided_pyramide')
         self.shapesComboBox.addItem('three sided pyramide', 'three_sided_pyramide')
 
+        # scale
         self.scaleSpinBox = QtWidgets.QDoubleSpinBox()
         self.scaleSpinBox.setValue(1.0)
         self.scaleSpinBox.setRange(-99, 99)
         self.scaleSpinBox.setSingleStep(1.0)
-        self.scaleSpinBox.setValue(20)
+        self.scaleSpinBox.setValue(1)
 
+        # color
         self.colorSpinBox = QtWidgets.QSpinBox()
         self.colorSpinBox.setRange(0, 31)
         self.colorSpinBox.setValue(13)
@@ -101,11 +103,17 @@ class ControlDialog(QtWidgets.QDialog):
         self.yellow_btn = QtWidgets.QPushButton('Yellow')
         self.cyan_btn = QtWidgets.QPushButton('Cyan')
 
-        self.combine_btn = QtWidgets.QPushButton('Combine selected curves under the first selected')
+        self.combine_btn = QtWidgets.QPushButton('combine selected curves under the first selected')
+
+        #
+        self.offsetSpinBox = QtWidgets.QSpinBox()
+        self.offsetSpinBox.setValue(0)
+
 
     def create_layouts(self):
         
         main_layout = QtWidgets.QVBoxLayout(self)
+        main_layout.setAlignment(QtCore.Qt.AlignTop)
 
         collapsible_wdg_create = UI.collapsible_wdg.CollapsibleWidget('Create new curve')
         collapsible_wdg_save = UI.collapsible_wdg.CollapsibleWidget('Save to Library')
@@ -117,13 +125,13 @@ class ControlDialog(QtWidgets.QDialog):
         main_layout.addWidget(collapsible_wdg_create)
         main_layout.addWidget(collapsible_wdg_save)
         main_layout.addWidget(collapsible_wdg_modify)
-        main_layout.setAlignment(QtCore.Qt.AlignTop)
 
         form_layout = QtWidgets.QFormLayout()
         form_layout.addRow('Shape', self.shapesComboBox)
         form_layout.addRow('Quick Search', self.customShapeLine)
-        form_layout.addRow('Scale', self.scaleSpinBox)
+        form_layout.addRow('Scale', self.scaleSpinBox)  # maybe replace with radius detection
         form_layout.addRow('Color Index', self.colorSpinBox)
+        form_layout.addRow('Offsets', self.offsetSpinBox)
 
         btn_run_layout = QtWidgets.QHBoxLayout()
         btn_run_layout.addWidget(self.btn_run)
@@ -150,6 +158,8 @@ class ControlDialog(QtWidgets.QDialog):
         collapsible_wdg_modify.addLayout(btn_combine_layout)
 
 
+
+
     def create_connections(self):
         """ """
         self.btn_run.clicked.connect(self.create_control_cmd)
@@ -166,6 +176,8 @@ class ControlDialog(QtWidgets.QDialog):
 
     def create_control_cmd(self):
         """ """
+        orig_sel = cmds.ls(sl=True, type='transform')
+
         new_name = create_unique_name(base_name='new_curve')
 
         shape = self.shapesComboBox.currentData()
@@ -173,16 +185,29 @@ class ControlDialog(QtWidgets.QDialog):
         if custom_shape != '':
             shape = custom_shape
 
-        scale = self.scaleSpinBox.value()
-        color = self.colorSpinBox.value()
-
         crv = ctl.ctrl.initialize_new_curve(name=new_name, shape=shape)
 
+        # scale
+        scale = self.scaleSpinBox.value()
         cmds.xform(f'{crv}.cv[*]', os=True, r=True, scale=(scale, scale, scale))
 
+        # color
+        color = self.colorSpinBox.value()
         for shp in cmds.listRelatives(crv, shapes=True):
             cmds.setAttr(f'{shp}.overrideEnabled', 1)
             cmds.setAttr(f'{shp}.overrideColor', color)
+
+        # offsets
+        offsets = ctl.ctrl.create_offsets(ctrl=new_name, number=self.offsetSpinBox.value())
+
+        # match transform
+        if orig_sel:
+            if len(offsets) > 0:
+                cmds.matchTransform(offsets[0], orig_sel[0])
+            else:
+                cmds.matchTransform(new_name, orig_sel[0])
+
+
 
     def save_to_library(self):
         crv = cmds.ls(sl=True)[0]
@@ -206,6 +231,7 @@ class ControlDialog(QtWidgets.QDialog):
             for shp in cmds.listRelatives(crv, shapes=True):
                 cmds.parent(shp, sel[0], r=True, shape=True)
             cmds.delete(crv)
+
 
 
 
