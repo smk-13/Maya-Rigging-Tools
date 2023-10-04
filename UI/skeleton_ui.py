@@ -45,9 +45,7 @@ class SkeletonDialog(QtWidgets.QDialog):
 
         self.skelComboBox = QtWidgets.QComboBox()
         self.skelComboBox.setMaxVisibleItems(30)
-        self.skelComboBox.addItem('test1', 'test1')
-        self.skelComboBox.addItem('test2', 'test2')
-        self.skelComboBox.addItem('test_arm', 'test_arm')
+        self.skelComboBox.addItem('Ahsoka', 'Ahsoka')
 
         self.customSkelLine = QtWidgets.QLineEdit()
         self.customSkelLine.setPlaceholderText('If not listed in drop down list')

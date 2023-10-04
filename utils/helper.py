@@ -39,6 +39,29 @@ def ik_handle(start_joint, end_joint, base_name, solver, parent=None):
         cmds.parent(ikh, parent)
     return ikh
 
+def create_offsets(ctrl, tokens):
+    """ """
+    offsets = list()
+    parent_offset = None
+    for token in tokens:
+        offset = cmds.createNode('transform', name=f'{ctrl}{token}')
+        cmds.matchTransform(offset, ctrl)
+        if parent_offset:
+            cmds.parent(offset, parent_offset)
+        parent_offset = offset
+        offsets.append(offset)
+    cmds.parent(ctrl, offsets[-1])
+    return offsets
+
+def tag_as_ctrl(ctrl):
+    """ """
+    tag = cmds.createNode('controller', name=f'{ctrl}_tag')
+    cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
+    return tag
+
+def set_hidden_attrs(ctrl, hidden_attrs):
+    for attr in hidden_attrs:
+        cmds.setAttr(f'{ctrl}.{attr}', lock=True, keyable=False, channelBox=False)
 
 
 ### matrix node functions

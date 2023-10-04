@@ -6,8 +6,8 @@ from PySide2 import QtWidgets
 from shiboken2 import wrapInstance
 from importlib import reload
 
-import ctl.ctrl
-reload(ctl.ctrl)
+import ctl.crv
+reload(ctl.crv)
 
 import UI.collapsible_wdg
 reload(UI.collapsible_wdg)
@@ -32,12 +32,12 @@ def create_unique_name(base_name):
 
 
 
-class ControlDialog(QtWidgets.QDialog):
+class CurveDialog(QtWidgets.QDialog):
 
     def __init__(self, parent=maya_main_window()):
         super().__init__(parent)
 
-        self.setWindowTitle('Control')
+        self.setWindowTitle('Curve Designer')
         self.setMaximumWidth(400)
         self.setMinimumWidth(400)
 
@@ -105,10 +105,6 @@ class ControlDialog(QtWidgets.QDialog):
 
         self.combine_btn = QtWidgets.QPushButton('combine selected curves under the first selected')
 
-        #
-        self.offsetSpinBox = QtWidgets.QSpinBox()
-        self.offsetSpinBox.setValue(0)
-
 
     def create_layouts(self):
         
@@ -129,9 +125,8 @@ class ControlDialog(QtWidgets.QDialog):
         form_layout = QtWidgets.QFormLayout()
         form_layout.addRow('Shape', self.shapesComboBox)
         form_layout.addRow('Quick Search', self.customShapeLine)
-        form_layout.addRow('Scale', self.scaleSpinBox)  # maybe replace with radius detection
+        form_layout.addRow('Scale', self.scaleSpinBox)
         form_layout.addRow('Color Index', self.colorSpinBox)
-        form_layout.addRow('Offsets', self.offsetSpinBox)
 
         btn_run_layout = QtWidgets.QHBoxLayout()
         btn_run_layout.addWidget(self.btn_run)
@@ -185,7 +180,7 @@ class ControlDialog(QtWidgets.QDialog):
         if custom_shape != '':
             shape = custom_shape
 
-        crv = ctl.ctrl.initialize_new_curve(name=new_name, shape=shape)
+        crv = ctl.crv.create_new_curve_from_lib(name=new_name, file_name=shape)
 
         # scale
         scale = self.scaleSpinBox.value()
@@ -197,15 +192,9 @@ class ControlDialog(QtWidgets.QDialog):
             cmds.setAttr(f'{shp}.overrideEnabled', 1)
             cmds.setAttr(f'{shp}.overrideColor', color)
 
-        # offsets
-        offsets = ctl.ctrl.create_offsets(ctrl=new_name, number=self.offsetSpinBox.value())
-
         # match transform
         if orig_sel:
-            if len(offsets) > 0:
-                cmds.matchTransform(offsets[0], orig_sel[0])
-            else:
-                cmds.matchTransform(new_name, orig_sel[0])
+            cmds.matchTransform(new_name, orig_sel[0])
 
 
 
@@ -214,14 +203,15 @@ class ControlDialog(QtWidgets.QDialog):
         if not cmds.objectType(cmds.listRelatives(crv, shapes=True)[0], isType='nurbsCurve'):
             raise RuntimeError('Not a curve.')
         name = self.newShapeLine.text()
-        ctl.ctrl.save_to_lib(crv=crv, shape_name=name)
+        ctl.crv.save_to_lib(crv=crv, shape_name=name)
 
     def color_curve_cmd(self, color):
         """ """
-        crv = cmds.ls(sl=True)[0]
-        for shp in cmds.listRelatives(crv, shapes=True):
-            cmds.setAttr(f'{shp}.overrideEnabled', 1)
-            cmds.setAttr(f'{shp}.overrideColor', color)
+        crvs = cmds.ls(sl=True)
+        for crv in crvs:
+            for shp in cmds.listRelatives(crv, shapes=True):
+                cmds.setAttr(f'{shp}.overrideEnabled', 1)
+                cmds.setAttr(f'{shp}.overrideColor', color)
 
     def combine_curves(self):
         sel = cmds.ls(sl=True, type='transform')

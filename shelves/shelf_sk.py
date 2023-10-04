@@ -17,17 +17,20 @@ reload(shelves.shelf_base)
 class sk_shelf(shelves.shelf_base._shelf):
 
     def build(self):
-        self.addButton(label="CTRL", command=self.ctrl_cmd)
+
+        self.addButton(label="CrvDes", command=self.curve_cmd)
+        self.addButton(label="CrvSet", command=self.curve_set_cmd)
         self.addButton(label="Orient", command=self.orient_cmd)
         self.addButton(label="Skel", command=self.skel_cmd)
-        #self.addButton(label="Biped", command=self.biped_cmd)
         self.addButton(label="Roll", command=self.roll_joints_cmd)
+        
 
 
-    def ctrl_cmd(self):
-        import UI.control_ui
-        reload(UI.control_ui)
-        UI.control_ui.ControlDialog()
+
+    def curve_cmd(self):
+        import UI.curve_ui
+        reload(UI.curve_ui)
+        UI.curve_ui.CurveDialog()
 
 
     def orient_cmd(self):
@@ -43,16 +46,16 @@ class sk_shelf(shelves.shelf_base._shelf):
         UI.skeleton_ui.SkeletonDialog()
 
 
-    def biped_cmd(self):
-        import UI.biped_ui
-        reload(UI.biped_ui)
-        UI.biped_ui.BipedDialog()
-
-
     def roll_joints_cmd(self):
         import UI.roll_joints_ui
         reload(UI.roll_joints_ui)
         UI.roll_joints_ui.RollJointsDialog()
+
+
+    def curve_set_cmd(self):
+        import UI.curve_set_ui
+        reload(UI.curve_set_ui)
+        UI.curve_set_ui.CurveSetDialog()
 
 
 

@@ -2,158 +2,28 @@ from maya import cmds
 from maya.api import OpenMaya
 import math
 from importlib import reload
-import os
-import json
+
 
 import utils.helper
 reload(utils.helper)
 
-CURRENT_DIRECTORY = os.path.dirname(__file__)
-SHAPE_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\shapes')
-
-
-
-
-
-def get_knots(crv_shape):
-    sel = OpenMaya.MSelectionList()
-    sel.add(crv_shape)
-    obj = sel.getDependNode(0)
-    if obj.hasFn(OpenMaya.MFn.kNurbsCurve):
-        crv_fn = OpenMaya.MFnNurbsCurve(obj)
-        return list(crv_fn.knots())
-
-
-def get_shape(crv):
-    """ returns a dataset to create a shape. Each shape can be represented by a dictionary with the
-    following four keys: degree, knot, periodic and point. To account for composite shapes the
-    the dataset returned by this function is a list of such dictionaries. """
-
-    crvShapeList = list()
-
-    for shp in cmds.listRelatives(crv, shapes=True):
-        crvShapeDict = {
-            'degree': cmds.getAttr(f'{shp}.degree'),
-            'knot': get_knots(shp)
-        }
-
-        crvShapeDict['periodic'] = True if (cmds.getAttr(f'{shp}.form')) == 2 else False
-
-        points = []
-        for i in range(cmds.getAttr(f'{shp}.controlPoints', size=True)):
-            points.append(cmds.getAttr(f'{shp}.controlPoints[{i}]')[0])
-        crvShapeDict['point'] = points
-
-        crvShapeList.append(crvShapeDict)
-
-    return crvShapeList
-
-
-def set_shape(crv, crvShapeList):
-    """ deletes all shape nodes of a transform node and creates a set of new shapes for it.
-        The color of the old shapes is retained.
-    """
-    if not cmds.objExists(crv):
-        cmds.error('curve doesn\'t exist.')
-
-    crvShapes = cmds.listRelatives(crv, shapes=True)
-
-    oldColor = cmds.getAttr(f'{crvShapes[0]}.overrideColor')
-    cmds.delete(crvShapes)
-
-    for i, crvShapeDict in enumerate(crvShapeList):
-        tmpCrv = cmds.curve(**crvShapeDict)
-        newShape = cmds.listRelatives(tmpCrv, shapes=True)[0]
-        cmds.parent(newShape, crv, relative=True, shape=True)
-        cmds.delete(tmpCrv)
-        newShape = cmds.rename(newShape, f'{crv}Shape{i}')
-        cmds.setAttr(f'{newShape}.overrideEnabled', 1)
-        cmds.setAttr(f'{newShape}.overrideColor', oldColor)
-    cmds.select(cl=True)
-
-
-
-def save_to_lib(crv, shape_name):
-    """ get the shape data (with the get_shape function) and save it as a json file in the library. """
-    path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape_name}.json')
-
-    shape_data = get_shape(shape_name)
-
-    with open(path, 'w') as f:
-        json.dump(shape_data, f, indent=4, sort_keys=True)
-        OpenMaya.MGlobal.displayInfo('Shape successfully saved to library.')
-
-    # TO DO: override warning
-
-
-def load_from_lib(shape):
-    """ returns the shape data from a json shape file of the library. """
-    path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape}.json')
-
-    if os.path.isfile(path):
-        with open(path, 'r') as f:
-            return json.load(f)
-    else:
-        cmds.error(f'The file {path} doesn\'t exist.')
-
-
-def initialize_new_curve(name, shape):
-    """ reads a dataset from the library and creates a completely new curve from it. """
-    data = load_from_lib(shape=shape)
-    crv = cmds.createNode('transform', name=name)
-    for i, crvShapeDict in enumerate(data):
-        tmpCrv = cmds.curve(**crvShapeDict)
-        newShape = cmds.listRelatives(tmpCrv, shapes=True)[0]
-        cmds.parent(newShape, crv, relative=True, shape=True)
-        cmds.delete(tmpCrv)
-        newShape = cmds.rename(newShape, f'{crv}Shape{i}')
-    cmds.select(cl=True)
-    return crv
-
-
-
-# utilty
-
-def tag_as_ctrl(ctrl):
-    """ """
-    tag = cmds.createNode('controller', name=f'{ctrl}_tag')
-    cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
-
-def create_offsets(ctrl=None, number=2):
-    """ """
-    if ctrl is None:
-        ctrl = cmds.ls(sl=True, type='transform')[0]
-
-    offsets = list()
-
-    parent_offset = None
-    for i in range(number):
-        offset = cmds.createNode('transform')
-        offsets.append(offset)
-        if parent_offset:
-            cmds.parent(offset, parent_offset)
-        parent_offset = offset
-        if i == number-1:
-            cmds.parent(ctrl, offset)
-
-    return offsets
-
-
-
+import ctl.utils
+reload(ctl.utils)
 
 
 
 
 class Control:
 
-    def __init__(self, base_name, shape='sphere', color=22, scale=1, hidden_attrs=None,
-        offsets=None, target=None, position_only=False, parent=None, limits=None, hide=False):
+    def __init__(self, base_name, shape='sphere', color=22, scale=1, hidden_attrs=None, offsets=None, target=None, position_only=False, parent=None, limits=None, hide=False):
 
+        # naming
         self.base_name = base_name
         self.ctrl = f'{base_name}_ctl'
         self.offsets = [f'{base_name}_{token}' for token in ('grp', 'buffer')] if offsets is None else [f'{base_name}_{token}' for token in offsets]
         self.grp = self.ctrl if self.offsets == [] else self.offsets[0]
 
+        # traits
         self.scale = scale
         self.color = color
         self.shape = shape
@@ -164,7 +34,7 @@ class Control:
         self.limits = limits
         self.hide = hide
 
-        self.create_ctrl_shape()
+        self.instantiate_ctrl_shape()
         self.set_scale()
         self.set_color()
         self.set_hidden_attrs()
@@ -176,8 +46,8 @@ class Control:
         self.tag_as_ctrl()
 
 
-    def create_ctrl_shape(self):
-        initialize_new_curve(name=self.ctrl, shape=self.shape)
+    def instantiate_ctrl_shape(self):
+        ctl.utils.create_new_curve(name=self.ctrl, shape=self.shape)
 
     def set_scale(self):
         cmds.xform(f'{self.ctrl}.cv[*]', os=True, r=True, scale=(self.scale, self.scale, self.scale))
@@ -204,6 +74,7 @@ class Control:
     def match_transform(self):
         if self.target:
             cmds.matchTransform(self.grp, self.target, position=True) if self.position_only else cmds.matchTransform(self.grp, self.target)
+            # cmds.xform(self.grp, ws=True, m=cmds.xform(self.target, q=True, ws=True, m=True))
 
     def set_parent(self):
         if self.parent:
@@ -215,15 +86,18 @@ class Control:
             cmds.transformLimits(self.ctrl, **self.limits)
 
     def hide_ctrl(self):
+        """ """
         if self.hide:
             for shp in cmds.listRelatives(self.ctrl, shapes=True):
                 cmds.setAttr(f'{shp}.visibility', 0)
 
     def tag_as_ctrl(self):
+        """ """
         self.tag = cmds.createNode('controller', name=f'{self.ctrl}_tag')
         cmds.connectAttr(f'{self.ctrl}.message', f'{self.tag}.controllerObject')
 
     def create_annotation(self, jnt):
+        """ """
         annotation_shp = cmds.annotate(self.ctrl, point=cmds.xform(jnt, query=True, ws=True, t=True), text='')
         cmds.parent(cmds.listRelatives(annotation_shp, parent=True)[0], self.ctrl)
         cmds.setAttr(f'{annotation_shp}.template', 1)
@@ -233,6 +107,7 @@ class Control:
 
 
     def place_along_pole_vector(self, elbow, distance):
+        """ """
         shoulder_vec = OpenMaya.MVector(cmds.xform(cmds.listRelatives(elbow, parent=True)[0], query=True, ws=True, t=True))
         elbow_vec = OpenMaya.MVector(cmds.xform(elbow, query=True, ws=True, t=True))
         wrist_vec = OpenMaya.MVector(cmds.xform(cmds.listRelatives(elbow, children=True)[0], query=True, ws=True, t=True))
@@ -254,6 +129,16 @@ class Control:
             cmds.setAttr(f'{self.grp}.rz', 0)
         else:
             cmds.xform(self.grp, ws=True, t=location_vec )
+
+
+    def add_counter_transform(self):
+        """ This performs a full counter transformation. It requires 3 buffers not counting the top level grp offset, hence a minimum of 4 total. """
+        if len(self.offsets) < 4:
+            cmds.error('A full Countertransform requires 4 buffers. ')
+
+        # not implemented yet
+
+
 
 
     def mirror_if_right_side(self, mirror_axis='X', right_side_token='R', left_side_token='L'):
@@ -286,9 +171,6 @@ class Control:
             cmds.xform(self.grp, ws=True, matrix=temp_loc_matrix)
 
             cmds.delete(temp_loc)
-
-
-
 
 
 
