@@ -12,6 +12,11 @@ reload(utils.orient_joints)
 import utils.helper
 reload(utils.helper)
 
+import UI.deco_lib
+reload(UI.deco_lib)
+
+
+
 # https://doc.qt.io/qtforpython-5/PySide2/QtCore/Qt.html#PySide2.QtCore.PySide2.QtCore.Qt.Key
 
 def maya_main_window():
@@ -158,6 +163,7 @@ class OrientJointsDialog(QtWidgets.QDialog):
         return aim_axis, up_axis
 
 
+    @UI.deco_lib.d_undoable
     def create_run_cmd1(self):
         """ """
         aim_axis, up_axis = self.get_axis()
@@ -165,6 +171,7 @@ class OrientJointsDialog(QtWidgets.QDialog):
         utils.orient_joints.orient_three_joints(joint_chain=None, aim_vec=aim_axis, up_vec=up_axis)
 
 
+    @UI.deco_lib.d_undoable
     def create_run_cmd2(self):
         """ """
         aim_axis, up_axis = self.get_axis()
@@ -172,6 +179,7 @@ class OrientJointsDialog(QtWidgets.QDialog):
         utils.orient_joints.orient_single_joint(aim_vec=aim_axis, up_vec=up_axis)
 
 
+    @UI.deco_lib.d_undoable
     def create_zero_out_cmd(self):
         """ """
         joints = cmds.ls(sl=True, type='joint')

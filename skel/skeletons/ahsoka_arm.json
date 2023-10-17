@@ -1,0 +1,178 @@
+[
+    {
+        "name": "L_clavicle",
+        "orientation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "parent": "C_chest",
+        "position": [
+            3.7320048990207795,
+            139.07689200731105,
+            0.0
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_shoulder",
+        "orientation": [
+            -14.521175328813232,
+            16.310969211713946,
+            -57.99943548980136
+        ],
+        "parent": "L_clavicle",
+        "position": [
+            13.064315651401673,
+            139.07689360365617,
+            -4.144378508100074e-15
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_elbow",
+        "orientation": [
+            -14.303284412848866,
+            -13.078720049167062,
+            -50.53688236248377
+        ],
+        "parent": "L_shoulder",
+        "position": [
+            24.611484969091705,
+            120.59796496562907,
+            -6.376396224785302
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_wrist",
+        "orientation": [
+            -14.303284412848866,
+            -13.078720049167062,
+            -50.53688236248377
+        ],
+        "parent": "L_elbow",
+        "position": [
+            39.53009058391878,
+            102.47649486852356,
+            -0.9233921030004675
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_clavicle",
+        "orientation": [
+            -180.0,
+            0.0,
+            0.0
+        ],
+        "parent": "C_chest",
+        "position": [
+            -3.732,
+            139.0770029692251,
+            0.0
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_shoulder",
+        "orientation": [
+            165.47882467118694,
+            -16.310969211713942,
+            57.999435489801336
+        ],
+        "parent": "R_clavicle",
+        "position": [
+            -13.0643,
+            139.0770029692251,
+            -4.144379999999997e-15
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_elbow",
+        "orientation": [
+            165.69671558715132,
+            13.078720049167082,
+            50.53688236248381
+        ],
+        "parent": "R_shoulder",
+        "position": [
+            -24.611500000000078,
+            120.59800296922522,
+            -6.376400000000027
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_wrist",
+        "orientation": [
+            165.69671558715132,
+            13.078720049167082,
+            50.53688236248381
+        ],
+        "parent": "R_elbow",
+        "position": [
+            -39.53010000000002,
+            102.47600296922522,
+            -0.92339200000003
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 2.7,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    }
+]

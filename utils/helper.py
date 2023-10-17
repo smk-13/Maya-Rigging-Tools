@@ -1,10 +1,23 @@
 from maya import cmds
 from maya.api import OpenMaya
+import os
 
 
 
 
 ### general functions
+
+
+
+
+def create_unique_name(base_name):
+    """ if the name already exist, it increments until it finds a unique name. """
+    count = 1
+    new_name = base_name
+    while cmds.objExists(new_name):
+        new_name = f'{base_name}_{count}'
+        count += 1
+    return new_name
 
 def convert_enum_names(enum_names: list):
     """ Turns the list ['A, 'B', 'C'] into the string 'A:B:C' """
@@ -20,6 +33,7 @@ def create_even_parameter_list(number, max_num=1):
         cmds.error('Number should be at least 2.')
     return [max_num / (number - 1) * i for i in range(number)]
 
+
 def select_by_root_joint():
     """ Returns the selected joint and all joints that sit below it in the hierarchy. """
     root = cmds.ls(sl=True, type='joint')[0]
@@ -30,14 +44,50 @@ def select_by_root_joint():
     sel.reverse()
     return sel
 
-def ik_handle(start_joint, end_joint, base_name, solver, parent=None):
+def ik_handle(start_joint, end_joint, base_name=None, solver='ikRPsolver'):
     """ Creates an ik handle, renames the effector, hides the ik handle and parents the ikh. """
+    if base_name is None:
+        base_name = end_joint
     ikh, eff = cmds.ikHandle(sj=start_joint, ee=end_joint, sol=solver, name=f'{base_name}_ikh')
     eff = cmds.rename(eff, f'{base_name}_eff')
     cmds.setAttr(f'{ikh}.visibility', 0)
-    if parent:
-        cmds.parent(ikh, parent)
     return ikh
+
+def validate_path(path=None):
+    """ Checks if the file already exists and provides a dialog to overwrite or not """
+    if os.path.isfile(path):
+        confirm = cmds.confirmDialog(title='Overwrite file?',
+                                   message=f'The file {path} already exists. Do you want to overwrite it?',
+                                   button=['Yes', 'No'],
+                                   defaultButton='Yes',
+                                   cancelButton='No',
+                                   dismissString='No')
+        if confirm == 'No':
+            OpenMaya.MGlobal.displayInfo(f'The file {path} was not saved')
+            # cmds.warning(f'The file {path} was not saved')
+            return 0
+    return 1
+
+
+
+### used in biped class
+
+def check_if_objs_exist(objects):
+    """ checks if the objects exists in the Maya scene to run this function. """
+    for obj in objects:
+        if not isinstance(obj, (list, tuple)):
+            obj = [obj]
+        for element in obj:
+            if not cmds.objExists(element):
+                OpenMaya.MGlobal.displayInfo('At least one necessary object does not exist to run this function.')
+                cmds.error()
+
+def check_chain_length(chain, length):
+    """ another layer of error checking to check the length of joint chain or FK control chains. """
+    if len(chain) != length:
+            OpenMaya.MGlobal.displayInfo(f'{chain} should have a length of {length} elements')
+            cmds.error()        
+
 
 def create_offsets(ctrl, tokens):
     """ """
@@ -53,15 +103,31 @@ def create_offsets(ctrl, tokens):
     cmds.parent(ctrl, offsets[-1])
     return offsets
 
-def tag_as_ctrl(ctrl):
-    """ """
-    tag = cmds.createNode('controller', name=f'{ctrl}_tag')
-    cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
-    return tag
-
 def set_hidden_attrs(ctrl, hidden_attrs):
     for attr in hidden_attrs:
         cmds.setAttr(f'{ctrl}.{attr}', lock=True, keyable=False, channelBox=False)
+
+
+
+
+
+
+
+### joint creation tools
+
+def calculate_mid_position(target_objects=None):
+    """ This version is unstable. I should replace this at some point with the cluster hack. """
+    selection = cmds.ls(selection=True, flatten=True) if target_objects is None else target_objects
+    vec = OpenMaya.MVector()
+    for i in selection:
+        current_vec = OpenMaya.MVector(cmds.xform(i, query=True, ws=True, t=True))
+        current_vec /= len(selection)  # division in OpenMaya
+        vec += current_vec
+    return vec
+
+
+
+
 
 
 ### matrix node functions
@@ -182,7 +248,7 @@ def create_equidistant_joint_chain(joints=None, joint_count=4):
     """ Number of joints includes start and end joint. """
 
     if joints is None:
-        joints = cmds.ls(sl=True, type='joint')
+        joints = cmds.ls(sl=True)  # shouldn't be restricted to joints
 
     vec1 = OpenMaya.MVector(cmds.xform(joints[0], query=True, ws=True, t=True))
     vec2 = OpenMaya.MVector(cmds.xform(joints[1], query=True, ws=True, t=True))
@@ -203,8 +269,6 @@ def create_equidistant_joint_chain(joints=None, joint_count=4):
 
 def measure_distance():
     sel = cmds.ls(sl=True, flatten=True)
-    if len(sel) <2:
-        cmds.error('Select two objects or vertices to measure the distance between them.')
     vec0 = OpenMaya.MVector(cmds.xform(sel[0], query=True, ws=True, t=True))
     vec1 = OpenMaya.MVector(cmds.xform(sel[1], query=True, ws=True, t=True))
     result_vec = vec1 - vec0
@@ -231,4 +295,8 @@ def optimize_constraint(constraint):
         cmds.connectAttr(f'{cnst_obj_parent[0]}.worldInverseMatrix', f'{constraint}.constraintParentInverseMatrix', f=True)
 
 
-
+def tag_as_ctrl(ctrl):
+    """ """
+    tag = cmds.createNode('controller', name=f'{ctrl}_tag')
+    cmds.connectAttr(f'{ctrl}.message', f'{tag}.controllerObject')
+    return tag

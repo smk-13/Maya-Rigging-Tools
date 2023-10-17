@@ -15,7 +15,8 @@ reload(utils.roll_joints)
 import UI.collapsible_wdg
 reload(UI.collapsible_wdg)
 
-
+import UI.deco_lib
+reload(UI.deco_lib)
 
 
 
@@ -29,11 +30,11 @@ class RollJointsDialog(QtWidgets.QDialog):
     def __init__(self, parent=maya_main_window()):
         super().__init__(parent)
 
-        self.lra_next = 1
+        # self.lra_next = 1
 
         self.setWindowTitle('No Flip Roll Joints')
-        self.setMaximumWidth(400)
-        self.setMinimumWidth(400)
+        self.setMaximumWidth(450)
+        self.setMinimumWidth(450)
 
         self.create_widgets()
         self.create_layouts()
@@ -47,6 +48,7 @@ class RollJointsDialog(QtWidgets.QDialog):
         # run buttons
         self.btn_run1 = QtWidgets.QPushButton('forearm/lowerLeg')
         self.btn_run2 = QtWidgets.QPushButton('upperArm/upperLeg')
+        self.btn3 = QtWidgets.QPushButton('print help')
 
         # aim axis
         self.r_btn_aimX = QtWidgets.QRadioButton('X')
@@ -72,15 +74,6 @@ class RollJointsDialog(QtWidgets.QDialog):
         self.lineEdit1 = QtWidgets.QLineEdit()
         self.lineEdit1.setText('L_upperArm')
 
-        # instructions
-        self.label1 = QtWidgets.QLabel('''For the forearm/lowerLeg the aim axis is inverted.
-However, if the skeleton has been mirrored to the right side, the aim axis is inverted again.''')
-        self.label1.setWordWrap(True)
-        self.label2 = QtWidgets.QLabel('''For the forearm/lowerLeg select the wrist/ankle, then elbow/knee.''')
-        self.label2.setWordWrap(True)
-        self.label3 = QtWidgets.QLabel('''For the upperArm/upperLeg select the clavicle/pelvis,
-then the shoulder/hip, and then the elbow/knee.''')
-        self.label3.setWordWrap(True)
 
     def create_layouts(self):
         """ """
@@ -113,27 +106,22 @@ then the shoulder/hip, and then the elbow/knee.''')
         # row3
         formLayout1.addRow('Basename', self.lineEdit1)
 
-        # run buttons
+        # buttons
         layout2 = QtWidgets.QHBoxLayout()
         collapsible_wdg1.addLayout(layout2)
         layout2.addWidget(self.btn_run1)
         layout2.addWidget(self.btn_run2)
+        layout2.addWidget(self.btn3)
 
-        # instruction text
-        collapsible_wdg2 = UI.collapsible_wdg.CollapsibleWidget('Instructions')
-        main_layout.addWidget(collapsible_wdg2)
-        collapsible_wdg2.setExpanded(False)
-        collapsible_wdg2.addWidget(self.label1)
-        collapsible_wdg2.addWidget(self.label2)
-        collapsible_wdg2.addWidget(self.label3)
 
 
     def create_connections(self):
         """ """
         self.btn_run1.clicked.connect(self.roll_joint_cmd1)
         self.btn_run2.clicked.connect(self.roll_joint_cmd2)
+        self.btn3.clicked.connect(self.print_helper_text_cmd)
 
-
+    @UI.deco_lib.d_undoable
     def roll_joint_cmd1(self):
         sel = cmds.ls(sl=True, type='joint')
 
@@ -144,7 +132,7 @@ then the shoulder/hip, and then the elbow/knee.''')
         utils.roll_joints.RollBoneInverse(aim_vec=aim_axis, inbetweens=inbetweens,
             base_name=base_name, wrist=sel[0], elbow=sel[1])
 
-
+    @UI.deco_lib.d_undoable
     def roll_joint_cmd2(self):
         sel = cmds.ls(sl=True, type='joint')
 
@@ -173,3 +161,12 @@ then the shoulder/hip, and then the elbow/knee.''')
             aim_axis = [0,0,-1]
 
         return aim_axis
+
+
+    def print_helper_text_cmd(self):
+        OpenMaya.MGlobal.displayInfo('For the forearm/lowerLeg select the wrist/ankle joint, then elbow/knee joint.')
+        OpenMaya.MGlobal.displayInfo('For the upperArm/upperLeg select the clavicle/pelvis joint, then the shoulder/hip joint, and then the elbow/knee joint.')
+        OpenMaya.MGlobal.displayInfo('For the forearm/lowerLeg the aim axis is inverted.')
+        OpenMaya.MGlobal.displayInfo('So, in case of the forearm/lowerLeg, if the axis pointing down the joint chain is X, set it to -X.')
+        OpenMaya.MGlobal.displayInfo('However, if the skeleton has been mirrored to the right side, the aim axis is inverted again.')
+

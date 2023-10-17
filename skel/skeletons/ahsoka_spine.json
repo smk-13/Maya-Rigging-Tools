@@ -1,67 +1,67 @@
 [
     {
-        "name": "L_hip_jnt",
+        "name": "C_pelvis",
         "orientation": [
+            90.00000000000003,
             0.0,
-            218.99099404250546,
-            89.99999999999994
+            90.0
         ],
         "parent": null,
         "position": [
-            0.0,
-            13.07312252964427,
-            -1.2450592885375489
+            7.75294250975634e-16,
+            115.71844482421875,
+            1.7458074498981766
         ],
         "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "radius": 1.0,
+        "radius": 8.0,
         "rotationOrder": "xyz",
         "scaleCompensate": true
     },
     {
-        "name": "L_knee_jnt",
+        "name": "C_spine_1",
         "orientation": [
+            90.00000000000003,
             0.0,
-            142.47573738554817,
-            89.99999999999994
+            90.0
         ],
-        "parent": "L_hip_jnt",
+        "parent": "C_pelvis",
         "position": [
-            5.127595883936577e-30,
-            6.847826086956549,
-            3.7944664031620343
+            7.75294250975634e-16,
+            115.71844779344386,
+            1.7458074498981766
         ],
         "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "radius": 1.0,
+        "radius": 3.0,
         "rotationOrder": "xyz",
         "scaleCompensate": true
     },
     {
-        "name": "L_ankle_jnt",
+        "name": "C_chest",
         "orientation": [
+            90.00000000000003,
             0.0,
-            142.47573738554817,
-            89.99999999999994
+            90.0
         ],
-        "parent": "L_knee_jnt",
+        "parent": "C_spine_1",
         "position": [
-            -7.343131604670871e-16,
-            -0.5632411067193628,
-            -1.897233201581031
+            7.75294250975634e-16,
+            132.6081994185136,
+            1.7458074498981766
         ],
         "preferredAngle": [
             0.0,
             0.0,
             0.0
         ],
-        "radius": 1.0,
+        "radius": 3.0,
         "rotationOrder": "xyz",
         "scaleCompensate": true
     }

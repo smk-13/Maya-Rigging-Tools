@@ -48,6 +48,8 @@ class RollBoneInverse:
         self.elbow = elbow
         self.wrist = wrist
 
+        # maybe the roll_end needs an offset?
+
         self.roll_end = joint_match_parent_freeze(name=f'{self.base_name}_end', pos=self.wrist, rot=self.elbow, parent=self.wrist)
         cmds.aimConstraint(self.elbow, self.roll_end, worldUpType='none', aimVector=self.aim_vec)
 
@@ -66,7 +68,10 @@ class RollBoneAnchor:
         self.inbetweens = inbetweens
         self.aim_vec = aim_vec
 
-        self.roll_start = joint_match_parent_freeze(name=f'{self.base_name}_start', pos=self.hip, rot=self.hip, parent=self.pelvis)
+        # the offset makes sure that there is no rotation upon creation
+        roll_start_offset = joint_match_parent_freeze(name=f'{self.base_name}_startOffset', pos=self.hip, rot=self.hip, parent=self.pelvis)
+
+        self.roll_start = joint_match_parent_freeze(name=f'{self.base_name}_start', pos=self.hip, rot=self.hip, parent=roll_start_offset)
         cmds.aimConstraint(self.knee, self.roll_start, worldUpType='none', aimVector=self.aim_vec)
 
         self.roll_end = joint_match_parent_freeze(name=f'{self.base_name}_end', pos=self.knee, rot=self.hip, parent=self.roll_start)

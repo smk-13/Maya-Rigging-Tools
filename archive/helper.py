@@ -441,7 +441,6 @@ def calculate_mid_position(target_objects=None):
         vec += current_vec
     return vec
 
-
 def place_joint_mid_position(target_objects=None):
     vec = calculate_mid_position(target_objects)
     cmds.select(cl=True)

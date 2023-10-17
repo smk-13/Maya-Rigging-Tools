@@ -5,19 +5,35 @@ from importlib import reload
 import utils.helper
 reload(utils.helper)
 
-import ctl.ctrl 
-reload(ctl.ctrl)
-
 
 
 
 class Master:
 
-    def __init__(self):
+    def __init__(self, masters, root):
+
+        self.masters = masters
+
+        utils.helper.check_if_objs_exist(objects=list(self.__dict__.values()))
+
+
+        self.root = root
+
+        self.create_hierarchy()
+        self.set_hidden_attrs()
+
+    def create_hierarchy(self):
         """ """
-        self.masterCtlObj = ctl.ctrl.Control(base_name='master', color=22, shape='brackets',
-            scale=45, offsets=[])
-        self.master2CtlObj = ctl.ctrl.Control(base_name='master2', color=14, shape='circleY',
-            scale=40, offsets=[], hidden_attrs=['v','sx','sy','sz'], parent=self.masterCtlObj.ctrl)
-     
+        parent = self.masters[0]
+        for m in self.masters[1:]:
+            cmds.parent(m, parent)
+            parent = m
+
+        if cmds.objExists(self.root):
+            cmds.parent(self.root, self.masters[-1])
+
+    def set_hidden_attrs(self):
+        for m in self.masters[1:]:
+            utils.helper.set_hidden_attrs(ctrl=m, hidden_attrs=['v', 'sx', 'sy', 'sz'])
+
 

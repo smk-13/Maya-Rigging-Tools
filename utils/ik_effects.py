@@ -9,7 +9,6 @@ reload(utils.helper)
 
 class SoftDistance:
 
-
     def __init__(self, base_name, target_transform, end_dcm, start_dcm, direction_vp, current_dist, rest_length_mdl, ctrl, soft_attr, master_dcm):
         self.base_name = base_name
         self.target_transform = target_transform
@@ -23,7 +22,6 @@ class SoftDistance:
         self.master_dcm = master_dcm
 
         self.soft_exp()
-
 
 
     def soft_exp(self):
@@ -52,6 +50,7 @@ class SoftDistance:
             {self.target_transform}.translateZ = {self.start_dcm}.outputTranslateZ + ({self.direction_vp}.outputZ * $softDist);
 
             """)
+
 
 
 
@@ -119,7 +118,6 @@ class IKEffects:
         self.lowerLock_dist = cmds.createNode('distanceBetween', name=f'{self.base_name}_lowerLock_DIST')
         cmds.connectAttr(f'{self.mid_buffer}.worldMatrix[0]', f'{self.lowerLock_dist}.inMatrix1')
         cmds.connectAttr(f'{self.effector}.worldMatrix[0]', f'{self.lowerLock_dist}.inMatrix2')
-
 
         self.soft_dist = cmds.createNode('distanceBetween', name=f'{self.base_name}_soft_DIST')
         cmds.connectAttr(f'{self.start_buffer}.worldMatrix[0]', f'{self.soft_dist}.inMatrix1')

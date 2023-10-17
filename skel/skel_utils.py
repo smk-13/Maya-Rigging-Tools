@@ -62,6 +62,14 @@ def get_skeleton_data(joints=None):
 
 def create_from_skeleton_data(skeleton_data):
     """ """
+
+    # prevent name clashing
+    jnt_names = [jnt_dict['name'] for jnt_dict in skeleton_data]
+    for jnt in jnt_names:
+        if cmds.objExists(jnt):
+            OpenMaya.MGlobal.displayInfo('stopped, because at least one joint with a specified name already exists.')
+            cmds.error()
+
     creation_data_keys = ['position', 'orientation', 'name', 'scaleCompensate', 'radius',
         'rotationOrder']
 
@@ -72,10 +80,12 @@ def create_from_skeleton_data(skeleton_data):
 
     for jnt_dict in skeleton_data:
         if jnt_dict['parent']:
-            cmds.parent(jnt_dict['name'], jnt_dict['parent'])
+            try:
+                cmds.parent(jnt_dict['name'], jnt_dict['parent'])  # try except block because the parent may not exist
+            except:
+                pass
 
         cmds.setAttr(f'{jnt}.preferredAngle', *jnt_dict['preferredAngle'])
-
 
 
 
@@ -83,13 +93,16 @@ def save_to_lib(file_name, joints=None):
     """ """
     path = os.path.join(SKELETON_LIBRARY_PATH, f'{file_name}.json')
 
+    # overwrite warning
+    if utils.helper.validate_path(path) == 0:
+        return
+
     skeleton_data = get_skeleton_data(joints=joints)
 
     with open(path, 'w') as f:
         json.dump(skeleton_data, f, indent=4, sort_keys=True)
         OpenMaya.MGlobal.displayInfo('Skeleton successfully saved to library.')
 
-    # TO DO: override warning
 
 
 def load_from_lib(file_name):

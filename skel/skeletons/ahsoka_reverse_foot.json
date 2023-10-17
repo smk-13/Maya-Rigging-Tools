@@ -1,0 +1,310 @@
+[
+    {
+        "name": "L_revCBank",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": null,
+        "position": [
+            19.596254184095223,
+            -1.9397964267286257e-15,
+            7.678717157733689
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revEBank",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revCBank",
+        "position": [
+            29.295660923384336,
+            2.4296720565574303e-15,
+            5.233071973596125
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revPivot",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revEBank",
+        "position": [
+            24.041593237394256,
+            -6.963905886492407e-18,
+            7.2316942666333714
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revHeel",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revPivot",
+        "position": [
+            20.472082641259128,
+            -9.673584576829217e-17,
+            -9.42629566807313
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revToe",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revHeel",
+        "position": [
+            26.138513565063494,
+            6.93639270564871e-17,
+            15.548061370849677
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revBall",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revToe",
+        "position": [
+            23.881843566894403,
+            2.9074370861053684,
+            6.598132133483917
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "L_revAnkle",
+        "orientation": [
+            0.0,
+            14.151789890422057,
+            0.0
+        ],
+        "parent": "L_revBall",
+        "position": [
+            21.009439468383576,
+            12.882799148559673,
+            -3.8205795288085778
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revCBank",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": null,
+        "position": [
+            -19.5963,
+            -1.9398e-15,
+            7.67872
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revEBank",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revCBank",
+        "position": [
+            -29.295699999999997,
+            2.4296699811163284e-15,
+            5.233069999999999
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revPivot",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revEBank",
+        "position": [
+            -24.041599999999992,
+            -6.963865399587348e-18,
+            7.231690000000008
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revHeel",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revPivot",
+        "position": [
+            -20.47210000000002,
+            -9.673569940226871e-17,
+            -9.426299999999987
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revToe",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revHeel",
+        "position": [
+            -26.1385,
+            6.936386166427376e-17,
+            15.548099999999966
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revBall",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revToe",
+        "position": [
+            -23.88179999999999,
+            2.907440000000003,
+            6.598130000000014
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "R_revAnkle",
+        "orientation": [
+            179.99999914622634,
+            -14.151789890422057,
+            1.2219328844887267e-23
+        ],
+        "parent": "R_revBall",
+        "position": [
+            -21.009400000000014,
+            12.882800000000007,
+            -3.8205799999999908
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    }
+]

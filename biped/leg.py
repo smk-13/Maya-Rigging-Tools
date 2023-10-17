@@ -5,69 +5,120 @@ from importlib import reload
 import utils.helper
 reload(utils.helper)
 
+import utils.soft_distance
+reload(utils.soft_distance)
 
 
 
-# This time, I don't create the ctrls here, but I use an already existing set of ctrls
-# I could create the offset groups here
+class ikLeg:
+    """ non reverse foot """
 
-class Leg:
-    """ """
+    def __init__(self, ik_chain, legTrans, legPV, footRot, toeRot, master=None):
 
-    def __init__(self, side):
-        """ """
+        self.ik_chain = ik_chain
+        self.legTrans = legTrans
+        self.legPV = legPV
+        self.footRot = footRot
+        self.toeRot = toeRot
 
-        self.side = side
-        self.offset_tokens = ['Grp']
+        utils.helper.check_if_objs_exist(objects=list(self.__dict__.values()))
 
-        self.leg_chain = [f'{side}_{i}' for i in ('hip', 'knee', 'ankle', 'ball', 'toe')]
-        self.rev_chain = [f'{side}_{i}' for i in ('revCBank', 'revEBank', 'revPivot', 'revHeel', 'revToe', 'revBall', 'revAnkle')]
-
-        self.legTrans = f'{side}_legTrans_ctl'
-        self.legPV = f'{side}_legPV_ctl'
-        self.footRoll = f'{side}_footRoll_ctl'
-        self.footRot = f'{side}_footRot_ctl'
-        self.toeRot = f'{side}_toeRot_ctl'
+        self.master = master
 
         self.create_offsets()
         self.main()
         self.set_hidden_attrs()
 
+
     def create_offsets(self):
-        self.legTrans_offsets = utils.helper.create_offsets(self.legTrans, tokens=self.offset_tokens)
-        self.legPV_offsets = utils.helper.create_offsets(self.legPV, tokens=self.offset_tokens)
-        self.footRoll_offsets = utils.helper.create_offsets(self.footRoll, tokens=self.offset_tokens)
-        self.footRot_offsets = utils.helper.create_offsets(self.footRot, tokens=self.offset_tokens)
-        self.toeRot_offsets = utils.helper.create_offsets(self.toeRot, tokens=self.offset_tokens)
+        self.legTrans_offsets = utils.helper.create_offsets(self.legTrans, tokens=['Grp'])
+        self.legPV_offsets = utils.helper.create_offsets(self.legPV, tokens=['Grp'])
+        self.footRot_offsets = utils.helper.create_offsets(self.footRot, tokens=['Grp'])
+        self.toeRot_offsets = utils.helper.create_offsets(self.toeRot, tokens=['Grp'])
 
     def set_hidden_attrs(self):
         utils.helper.set_hidden_attrs(ctrl=self.legTrans, hidden_attrs=['v', 'sx', 'sy', 'sz', 'rx', 'ry', 'rz'])
         utils.helper.set_hidden_attrs(ctrl=self.legPV, hidden_attrs=['v', 'sx', 'sy', 'sz', 'rx', 'ry', 'rz'])
-        utils.helper.set_hidden_attrs(ctrl=self.footRoll, hidden_attrs=['v', 'sx', 'sy', 'sz', 'tx', 'ty', 'tz'])
-        utils.helper.set_hidden_attrs(ctrl=self.footRot, hidden_attrs=['v', 'sx', 'sy', 'sz', 'tx', 'ty', 'tz', 'rz'])
+        utils.helper.set_hidden_attrs(ctrl=self.footRot, hidden_attrs=['v', 'sx', 'sy', 'sz', 'tx', 'ty', 'tz'])
         utils.helper.set_hidden_attrs(ctrl=self.toeRot, hidden_attrs=['v', 'sx', 'sy', 'sz', 'tx', 'ty', 'tz', 'rx', 'rz'])
 
+    def main(self):
+
+        self.leg_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[0], end_joint=self.ik_chain[2])
+
+        cmds.parent(self.leg_ikh, self.legTrans)
+        cmds.poleVectorConstraint(self.legPV, self.leg_ikh)
+
+        cmds.parent(self.toeRot_offsets[0], self.footRot)
+
+        cmds.orientConstraint(self.footRot, self.ik_chain[2])
+        cmds.orientConstraint(self.toeRot, self.ik_chain[3])
+        cmds.pointConstraint(self.ik_chain[2], self.footRot_offsets[0])
+
+        # connect
+        if cmds.objExists(self.master):
+            cmds.parent(self.legTrans_offsets[0], self.master)
+            cmds.parent(self.legPV_offsets[0], self.master)
+            cmds.parent(self.footRot_offsets[0], self.master)
+
+
+
+    # def add_soft_distance(self):
+    #     utils.soft_distance.SoftIK(base_name=self.ik_chain[2], ctrl=self.legTrans,
+    #         ik_chain=self.ik_chain, start=self.leg_conn, end=self.legTrans, master=self.leg_conn,
+    #         ikh=self.leg_ikh)
+
+
+
+
+class rev_ikLeg:
+    """ """
+
+    def __init__(self, ik_chain, rev_chain, legTrans, legPV, footRoll, master):
+
+        # TO DO: Add toe tap
+
+        self.ik_chain = ik_chain
+        self.rev_chain = rev_chain
+        self.legTrans = legTrans
+        self.legPV = legPV
+        self.footRoll = footRoll
+
+        utils.helper.check_if_objs_exist(objects=list(self.__dict__.values()))
+        utils.helper.check_chain_length(chain=self.ik_chain, length=5)
+        utils.helper.check_chain_length(chain=self.rev_chain, length=7)
+
+        self.master = master
+
+        self.create_offsets()
+        self.main()
+        self.set_hidden_attrs()
+
+
+    def create_offsets(self):
+        self.legTrans_offsets = utils.helper.create_offsets(self.legTrans, tokens=['Grp'])
+        self.legPV_offsets = utils.helper.create_offsets(self.legPV, tokens=['Grp'])
+        self.footRoll_offsets = utils.helper.create_offsets(self.footRoll, tokens=['Grp'])
+
+    def set_hidden_attrs(self):
+        utils.helper.set_hidden_attrs(ctrl=self.legTrans, hidden_attrs=['v', 'sx', 'sy', 'sz'])
+        utils.helper.set_hidden_attrs(ctrl=self.legPV, hidden_attrs=['v', 'sx', 'sy', 'sz', 'rx', 'ry', 'rz'])
+        utils.helper.set_hidden_attrs(ctrl=self.footRoll, hidden_attrs=['v', 'sx', 'sy', 'sz', 'tx', 'ty', 'tz'])
 
     def main(self):
         """ """
-        self.leg_conn = utils.helper.duplicate_single_joint(joint=self.leg_chain[0],
-            name=f'{self.side}_legRig')
 
-        cmds.parent(self.leg_chain[0], self.leg_conn)
-
-        #self.ik_chain = utils.helper.duplicate_joint_chain_v3(joint_chain=self.leg_chain, suffix='IK', parent=self.leg_conn)
-        self.ik_chain = self.leg_chain
-
-        self.leg_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[0], end_joint=self.ik_chain[2], base_name=f'{self.side}_leg', solver='ikRPsolver')
-        self.foot_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[2], end_joint=self.ik_chain[3], base_name=f'{self.side}_foot', solver='ikSCsolver')
-        self.toe_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[3], end_joint=self.ik_chain[4], base_name=f'{self.side}_toe', solver='ikSCsolver')
+        self.leg_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[0], end_joint=self.ik_chain[2], solver='ikRPsolver')
+        self.foot_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[2], end_joint=self.ik_chain[3], solver='ikSCsolver')
+        self.toe_ikh = utils.helper.ik_handle(start_joint=self.ik_chain[3], end_joint=self.ik_chain[4], solver='ikSCsolver')
 
         cmds.poleVectorConstraint(self.legPV, self.leg_ikh)
 
-        cmds.parent(self.toe_ikh, self.toeRot)
+        cmds.parent(self.toe_ikh, self.rev_chain[4])
         cmds.parent(self.leg_ikh, self.rev_chain[6])
         cmds.parent(self.foot_ikh, self.rev_chain[5])
-        cmds.parent(self.rev_chain[0], self.footRot)
+        cmds.parent(self.rev_chain[0], self.legTrans)
+        cmds.parent(self.footRoll_offsets[0], self.legTrans)
 
         toe_lift = 'ToeLiftAngle'
         toe_straight = 'ToeStraightAngle'
@@ -75,9 +126,9 @@ class Leg:
         cmds.addAttr(self.footRoll, ln=toe_straight, at='double', dv=75, k=True)
 
         # roll
-        condition_roll = cmds.createNode('condition', name=f'{self.side}_footRoll_COND')
-        blend_roll = cmds.createNode('blendColors', name=f'{self.side}_footRoll_BC')
-        remap_roll = cmds.createNode('remapValue', name=f'{self.side}_footRoll_REMAP')
+        condition_roll = cmds.createNode('condition', name=f'{self.footRoll}_roll_COND')
+        blend_roll = cmds.createNode('blendColors', name=f'{self.footRoll}_roll_BC')
+        remap_roll = cmds.createNode('remapValue', name=f'{self.footRoll}_roll_REMAP')
         cmds.setAttr(f'{condition_roll}.operation', 2)
         cmds.setAttr(f'{condition_roll}.colorIfFalseR', 0)
         cmds.connectAttr(f'{self.footRoll}.rotateX', f'{condition_roll}.colorIfFalseG')
@@ -94,7 +145,7 @@ class Leg:
         cmds.connectAttr(f'{blend_roll}.outputG', f'{self.rev_chain[5]}.rotateX')
 
         # bank
-        condition_bank = cmds.createNode('condition', name=f'{self.side}_banking_COND')
+        condition_bank = cmds.createNode('condition', name=f'{self.footRoll}_banking_COND')
         cmds.setAttr(f'{condition_bank}.operation', 2)
         cmds.setAttr(f'{condition_bank}.colorIfFalseR', 0)
         cmds.connectAttr(f'{self.footRoll}.rotateZ', f'{condition_bank}.colorIfFalseG')
@@ -109,13 +160,10 @@ class Leg:
         # hide rev chain
         for i in self.rev_chain: cmds.setAttr(f'{i}.drawStyle', 2)
 
-        # parenting
-        cmds.parent(self.footRoll_offsets[0], self.legTrans)
-        cmds.parent(self.footRot_offsets[0], self.legTrans)
-        cmds.parent(self.toeRot_offsets[0], self.rev_chain[4])
-        cmds.parent(self.legTrans_offsets[0], self.leg_conn)
-        cmds.parent(self.legPV_offsets[0], self.leg_conn)
-
+        # connect
+        if cmds.objExists(self.master):
+            cmds.parent(self.legTrans_offsets[0], self.master)
+            cmds.parent(self.legPV_offsets[0], self.master)
 
 
 

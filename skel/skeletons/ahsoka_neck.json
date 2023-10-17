@@ -1,0 +1,46 @@
+[
+    {
+        "name": "C_neck",
+        "orientation": [
+            90.00000000000003,
+            0.0,
+            90.0
+        ],
+        "parent": "C_chest",
+        "position": [
+            0.0,
+            145.10876798439725,
+            -2.7891699915522583
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    },
+    {
+        "name": "C_head",
+        "orientation": [
+            90.00000000000003,
+            0.0,
+            90.0
+        ],
+        "parent": "C_neck",
+        "position": [
+            0.0,
+            153.91718324989756,
+            -1.172601999358413
+        ],
+        "preferredAngle": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 3.0,
+        "rotationOrder": "xyz",
+        "scaleCompensate": true
+    }
+]

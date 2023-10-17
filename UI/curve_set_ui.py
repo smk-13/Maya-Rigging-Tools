@@ -5,12 +5,19 @@ from PySide2 import QtCore
 from PySide2 import QtWidgets
 from shiboken2 import wrapInstance
 from importlib import reload
+import os
 
 import ctl.crv
 reload(ctl.crv)
 
 import UI.collapsible_wdg
 reload(UI.collapsible_wdg)
+
+import UI.dropdown_config_utils
+reload(UI.dropdown_config_utils)
+
+import UI.deco_lib
+reload(UI.deco_lib)
 
 
 
@@ -26,8 +33,8 @@ class CurveSetDialog(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setWindowTitle('Curve Sets')
-        self.setMaximumWidth(400)
-        self.setMinimumWidth(400)
+        self.setMaximumWidth(450)
+        self.setMinimumWidth(450)
 
         self.create_widgets()
         self.create_layouts()
@@ -39,8 +46,11 @@ class CurveSetDialog(QtWidgets.QDialog):
         """ """
         self.comboBox1 = QtWidgets.QComboBox()
         self.comboBox1.setMaxVisibleItems(30)
-        self.comboBox1.addItem('Ahsoka Leg', 'ahsoka_leg')
-        self.comboBox1.addItem('Ahsoka Arm', 'ahsoka_arm')
+        # self.comboBox1.addItem('Ahsoka', 'Ahsoka')
+
+        drop_down_dict = UI.dropdown_config_utils.get_lib_data(file_name='curve_set_dropdown')
+        for label, file_name in drop_down_dict.items():
+            self.comboBox1.addItem(label, file_name)
 
         self.editLine1 = QtWidgets.QLineEdit()
         self.editLine1.setPlaceholderText('If not listed in drop down list')
@@ -54,9 +64,16 @@ class CurveSetDialog(QtWidgets.QDialog):
         self.btn_save = QtWidgets.QPushButton('Save')
         self.btn_save.setMaximumWidth(60)
 
+        self.btn_lib = QtWidgets.QPushButton('Library')
+        self.btn_lib.setMaximumWidth(60)
+
+        self.btn_config = QtWidgets.QPushButton('Config')
+        self.btn_config.setMaximumWidth(60)
+
+
     def create_layouts(self):
         """ """
-                #
+        #
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.setAlignment(QtCore.Qt.AlignTop)
 
@@ -80,15 +97,20 @@ class CurveSetDialog(QtWidgets.QDialog):
         collapsible_wdg2.addLayout(save_layout)
         save_layout.addWidget(self.editLine2)
         save_layout.addWidget(self.btn_save)
+        save_layout.addWidget(self.btn_lib)
+        save_layout.addWidget(self.btn_config)
 
     def create_connections(self):
         """ """
         self.btn_load.clicked.connect(self.load_cmd)
         self.btn_save.clicked.connect(self.save_cmd)
+        self.btn_lib.clicked.connect(self.open_lib_folder_cmd)
+        self.btn_config.clicked.connect(self.open_dropdown_config_file_cmd)
 
-
+    @UI.deco_lib.d_undoable
     def load_cmd(self):
         """ """
+
         file_name = self.comboBox1.currentData()
         quick_search = self.editLine1.text()
         if quick_search != '':
@@ -99,4 +121,30 @@ class CurveSetDialog(QtWidgets.QDialog):
     def save_cmd(self):
         """ """
         file_name = self.editLine2.text()
+
+        # error checking
+        if file_name == '':
+            OpenMaya.MGlobal.displayInfo('no name assigned')
+            return
+        sel = cmds.ls(sl=True)
+        if len(sel) == 0:
+            OpenMaya.MGlobal.displayInfo('nothing selected')
+            return
+        else:
+            for s in sel:
+                if cmds.listRelatives(s, shapes=True) is None:
+                    OpenMaya.MGlobal.displayInfo('at least one selected object is not curve')
+                    return
+
+
         ctl.crv.save_shape_set_to_lib(file_name=file_name)
+
+    def open_lib_folder_cmd(self):
+        lib_dir = ctl.crv.SHAPE_SETS_LIBRARY_PATH
+        os.startfile(lib_dir)
+
+    def open_dropdown_config_file_cmd(self):
+        """ """
+        config_file = UI.dropdown_config_utils.DROPDOWN_CONFIGS_PATH + '\\curve_set_dropdown.json'
+        # open(config_file, 'r')
+        os.startfile(config_file)

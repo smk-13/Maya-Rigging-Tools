@@ -47,7 +47,7 @@ def orient_single_joint(aim_vec=[1,0,0], up_vec=[0,0,1]):
     """ Orients a single joint with an aim object and an up object. Select the joint that will
     be oriented first, the aim object second, and the up object last. """
 
-    sel = cmds.ls(sl=True)
+    sel = cmds.ls(sl=True, flatten=True)
 
     if cmds.objectType(sel[0])!='joint':
         cmds.error('The first object of the selection must be a joint.')
@@ -67,32 +67,32 @@ def orient_single_joint(aim_vec=[1,0,0], up_vec=[0,0,1]):
             cmds.parent(child, sel[0])
 
 
-def orient_joint_chain(joint_chain=None, aim_vec=[1,0,0], up_vec=[0,0,1]):
-    """ right now, worldUpType is just set to None. Up_vec is not used. """
+# def orient_joint_chain(joint_chain=None, aim_vec=[1,0,0], up_vec=[0,0,1]):
+#     """ right now, worldUpType is just set to None. Up_vec is not used. """
     
-    if joint_chain is None:
-        joint_chain = utils.helper.select_by_root_joint()
+#     if joint_chain is None:
+#         joint_chain = utils.helper.select_by_root_joint()
 
-    for n, jnt in enumerate(joint_chain):
-        children = cmds.listRelatives(jnt, children=True)
-        if children:
-            for child in children:
-                cmds.parent(child, world=True)
+#     for n, jnt in enumerate(joint_chain):
+#         children = cmds.listRelatives(jnt, children=True)
+#         if children:
+#             for child in children:
+#                 cmds.parent(child, world=True)
 
-        if jnt == joint_chain[-1]:
-            cmds.makeIdentity(jnt, apply=True)
-            cmds.joint(jnt, edit=True, orientation=[0,0,0])
-        else:
-            cnst = cmds.aimConstraint(joint_chain[n+1], jnt, worldUpType='None', aimVector=aim_vec,
-                worldUpVector=up_vec, mo=False)[0]
-            cmds.delete(cnst)
-            cmds.makeIdentity(jnt, apply=True)
+#         if jnt == joint_chain[-1]:
+#             cmds.makeIdentity(jnt, apply=True)
+#             cmds.joint(jnt, edit=True, orientation=[0,0,0])
+#         else:
+#             cnst = cmds.aimConstraint(joint_chain[n+1], jnt, worldUpType='None', aimVector=aim_vec,
+#                 worldUpVector=up_vec, mo=False)[0]
+#             cmds.delete(cnst)
+#             cmds.makeIdentity(jnt, apply=True)
 
-        if children:
-            for child in children:
-                cmds.parent(child, jnt)
+#         if children:
+#             for child in children:
+#                 cmds.parent(child, jnt)
 
-    cmds.select(joint_chain[0])
+#     cmds.select(joint_chain[0])
 
 
 

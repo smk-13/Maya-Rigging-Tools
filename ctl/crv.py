@@ -14,7 +14,10 @@ SHAPE_SETS_LIBRARY_PATH = os.path.abspath(f'{CURRENT_DIRECTORY}\\shape_sets')
 
 
 
-# TO DO: code works, but I may have to clean up the naming
+
+
+
+
 
 
 def get_knots(crv_shape):
@@ -55,13 +58,16 @@ def save_to_lib(crv, shape_name):
     """ get the shape data (with the get_shape function) and save it as a json file in the library. """
     path = os.path.join(SHAPE_LIBRARY_PATH, f'{shape_name}.json')
 
-    shape_data = get_shape(shape_name)
+    # overwrite warning
+    if utils.helper.validate_path(path) == 0:
+        return
+
+    shape_data = get_shape(crv)
 
     with open(path, 'w') as f:
         json.dump(shape_data, f, indent=4, sort_keys=True)
         OpenMaya.MGlobal.displayInfo('Shape successfully saved to library.')
 
-    # TO DO: override warning
 
 
 def load_from_lib(shape):
@@ -122,6 +128,10 @@ def save_shape_set_to_lib(file_name, crvs=None):
     """ """
     path = os.path.join(SHAPE_SETS_LIBRARY_PATH, f'{file_name}.json')
 
+    # overwrite warning
+    if utils.helper.validate_path(path) == 0:
+        return
+
     shape_set_data = get_shape_set(crvs)
 
     with open(path, 'w') as f:
@@ -142,6 +152,15 @@ def load_shape_set_from_lib(file_name):
 
 def create_shape_set_from_lib(file_name):
     shape_set_list = load_shape_set_from_lib(file_name)
+
+    # check for name clashing
+    crv_names = [crv_dict['name'] for crv_dict in shape_set_list]
+    for crv in crv_names:
+        if cmds.objExists(crv):
+            OpenMaya.MGlobal.displayInfo('stopped, because at least one curve already exists.')
+            return
+           # cmds.error('stopped, because at least one curve already exists.')
+    
     for data in shape_set_list:
         Shape(**data)
 
