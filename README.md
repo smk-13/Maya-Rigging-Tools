@@ -13,7 +13,7 @@ Then add the following lines to the userSetup.py file:
     cmds.evalDeferred('shelves.shelf_sk.sk_shelf(name=\'sk_toolkit\')')
 ```
 
-The userSetup.py file is also in the maya scripts folder. In a fresh Maya installation the userSetup.py file doesn't exist. In that case, create a new one.
+The userSetup.py file is in the maya scripts folder. In a fresh Maya installation the userSetup.py file doesn't exist. In that case, create a new one.
 
 ## Documentation
 
