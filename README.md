@@ -1,7 +1,7 @@
 # Rigging Toolkit for Maya
 
 ## Installation
-Copy the Maya_Rigging_Tools folder anywhere you want and add PYTHONPATH = [insert your path] to the maya.env file. The maya.env file usually located at C:\Users\NAME\Documents\maya\YEAR.
+Copy the Maya_Rigging_Tools folder anywhere you want and add PYTHONPATH = [insert your path] to the maya.env file. The maya.env file is usually located at C:\Users\NAME\Documents\maya\YEAR.
 
 Then add the following lines to the userSetup.py file:
 
